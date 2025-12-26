@@ -5,28 +5,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 @Entity
-@Table(name = "submissions")
+@Table(name = "files")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Submission {
+public class File {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime submittedAt;
+    private String fileUrl;
 
     @ManyToOne
-    private Task task;
-
-    @ManyToOne
-    private Student student;
-
-    @OneToMany(mappedBy = "submission", cascade = CascadeType.ALL)
-    private List<File> files;
+    private Submission submission;
 }
