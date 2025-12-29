@@ -15,6 +15,8 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
 
     List<Staff> findByPosition(String position);
 
-    @Query("SELECT s FROM Staff s WHERE s.firstName LIKE %:name% OR s.lastName LIKE %:name%")
-    List<Staff> findByNameContaining(String name);
+//    @Query("SELECT s FROM Staff s WHERE s.firstName LIKE %:name% OR s.lastName LIKE %:name%")
+//    List<Staff> findByNameContaining(String name);
+
+    List<Staff> findByFirstNameContainingIgnoreCase(String name);
 }

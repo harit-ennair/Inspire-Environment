@@ -1,5 +1,7 @@
 package com.example.inspire_environment.dto.request;
 
+import com.example.inspire_environment.entity.Staff;
+import com.example.inspire_environment.enums.ActivityType;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -7,8 +9,8 @@ import java.time.LocalDateTime;
 @Data
 public class ActivityRequestDTO {
     private String title;
-    private String type; // SESSION, VISIT, WORKSHOP
+    private ActivityType type; // SESSION, VISIT, WORKSHOP
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private String managedBy;
+    private Staff managedBy;
 }
