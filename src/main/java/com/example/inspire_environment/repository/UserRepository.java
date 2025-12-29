@@ -1,7 +1,7 @@
 package com.example.inspire_environment.repository;
 
+import com.example.inspire_environment.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.core.userdetails.User;
 
 import java.util.List;
 import java.util.Optional;

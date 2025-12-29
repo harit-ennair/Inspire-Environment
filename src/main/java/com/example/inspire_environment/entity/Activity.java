@@ -29,6 +29,14 @@ public class Activity {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
-    private String managedBy;
+    @ManyToOne
+    @JoinColumn(name = "staff_id")
+    private Staff managedBy;
+
+    @OneToMany(mappedBy = "activity")
+    private List<Task> tasks;
+
+    @OneToMany(mappedBy = "activity")
+    private List<Attendance> attendances;
 
 }

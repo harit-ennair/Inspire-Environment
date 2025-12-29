@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "tasks")
@@ -24,4 +25,7 @@ public class Task {
 
     @ManyToOne
     private Activity activity;
+
+    @OneToMany(mappedBy = "task")
+    private List<Submission> submissions;
 }

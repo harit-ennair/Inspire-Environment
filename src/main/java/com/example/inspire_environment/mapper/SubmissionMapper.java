@@ -5,21 +5,22 @@ import com.example.inspire_environment.entity.Submission;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-@Mapper(componentModel = "spring")
+
+@Mapper(componentModel = "spring", uses = {StudentMapper.class, FileMapper.class})
 public interface SubmissionMapper {
-    @Mapping(target = "task", ignore = true)
-    @Mapping(target = "student", ignore = true)
-    @Mapping(target = "files", ignore = true)
+    @Mapping(target = "task", ignore = true) // Avoid circular reference
+    @Mapping(target = "student", ignore = true) // Student relationship is not available in entity
+    @Mapping(source = "files", target = "files")
     SubmissionResponseDTO toResponseDTO(Submission submission);
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "task", ignore = true)
-    @Mapping(target = "student", ignore = true)
-    @Mapping(target = "submittedAt", ignore = true)
+    @Mapping(target = "submittedAt", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "files", ignore = true)
     Submission toEntity(SubmissionRequestDTO dto);
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "task", ignore = true)
-    @Mapping(target = "student", ignore = true)
     @Mapping(target = "submittedAt", ignore = true)
     @Mapping(target = "files", ignore = true)
     void updateEntityFromDTO(SubmissionRequestDTO dto, @MappingTarget Submission submission);

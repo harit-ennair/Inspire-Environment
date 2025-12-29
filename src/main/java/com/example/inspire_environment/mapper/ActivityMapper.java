@@ -7,21 +7,33 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
-@Mapper(componentModel = "spring")
+
+@Mapper(componentModel = "spring", uses = {TaskMapper.class})
 public interface ActivityMapper {
     @Mapping(source = "type", target = "type", qualifiedByName = "activityTypeToString")
-    @Mapping(target = "tasks", ignore = true)
+    @Mapping(source = "managedBy.firstName", target = "managedBy")
+    @Mapping(target = "tasks", source = "tasks")
     ActivityResponseDTO toResponseDTO(Activity activity);
+
     @Mapping(source = "type", target = "type", qualifiedByName = "stringToActivityType")
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "managedBy", ignore = true)
+    @Mapping(target = "tasks", ignore = true)
+    @Mapping(target = "attendances", ignore = true)
     Activity toEntity(ActivityRequestDTO dto);
+
     @Mapping(source = "type", target = "type", qualifiedByName = "stringToActivityType")
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "managedBy", ignore = true)
+    @Mapping(target = "tasks", ignore = true)
+    @Mapping(target = "attendances", ignore = true)
     void updateEntityFromDTO(ActivityRequestDTO dto, @MappingTarget Activity activity);
+
     @Named("activityTypeToString")
     default String activityTypeToString(ActivityType type) {
         return type != null ? type.name() : null;
     }
+
     @Named("stringToActivityType")
     default ActivityType stringToActivityType(String type) {
         return type != null ? ActivityType.valueOf(type) : null;
