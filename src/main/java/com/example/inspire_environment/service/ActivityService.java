@@ -2,6 +2,7 @@ package com.example.inspire_environment.service;
 
 import com.example.inspire_environment.dto.request.ActivityRequestDTO;
 import com.example.inspire_environment.dto.response.ActivityResponseDTO;
+import com.example.inspire_environment.entity.Activity;
 
 import java.util.List;
 
@@ -16,6 +17,12 @@ public interface ActivityService {
     List<ActivityResponseDTO> getActivitiesByStudent(Long studentId);
 
     List<ActivityResponseDTO> getActivitiesManagedBy(String managedBy);
+
+    List<ActivityResponseDTO> getActivitiesByDepartment(Long departmentId);
+
+    List<ActivityResponseDTO> getActivitiesThatWeekByStudent(Long studentId);
+
+    List<Activity> findByTitleContainingIgnoreCase(String title);
 
     void assignStudentToActivity(Long activityId, Long studentId);
 

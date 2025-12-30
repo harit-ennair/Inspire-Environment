@@ -14,6 +14,11 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
     List<Activity> findByManagedById(Long staffId);
 
+    List<Activity> findByManagedBy(String managedBy);
+
+    @Query("SELECT DISTINCT a FROM Activity a JOIN a.attendances att WHERE att.student.id = :studentId")
+    List<Activity> findByStudents_Id(Long studentId);
+
     @Query("SELECT a FROM Activity a WHERE a.startDate >= :startDate AND a.endDate <= :endDate")
     List<Activity> findByDateRange(LocalDateTime startDate, LocalDateTime endDate);
 
