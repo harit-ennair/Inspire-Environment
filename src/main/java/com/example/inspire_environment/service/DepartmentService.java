@@ -1,4 +1,17 @@
 package com.example.inspire_environment.service;
 
-public class DepartmentService {
+import com.example.inspire_environment.dto.request.DepartmentRequestDTO;
+import com.example.inspire_environment.dto.response.DepartmentResponseDTO;
+
+import java.util.List;
+
+public interface DepartmentService {
+
+    DepartmentResponseDTO createDepartment(DepartmentRequestDTO dto);
+
+    List<DepartmentResponseDTO> getAllDepartments();
+
+    DepartmentResponseDTO getDepartmentById(Long id);
+
+    void deleteDepartment(Long id);
 }
