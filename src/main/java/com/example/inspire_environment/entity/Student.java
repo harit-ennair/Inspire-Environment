@@ -1,9 +1,6 @@
 package com.example.inspire_environment.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,6 +24,9 @@ public class Student extends User {
 
     @OneToMany(mappedBy = "student")
     private List<Submission> submissions ;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    private List<Presence> presences;
 
 
 }

@@ -22,6 +22,8 @@ public interface ActivityService {
 
     List<ActivityResponseDTO> getActivitiesThatWeekByStudent(Long studentId);
 
+    List<ActivityResponseDTO> getActivitiesThatWeekByDepartment(Long departmentId);
+
     List<Activity> findByTitleContainingIgnoreCase(String title);
 
     void assignStudentToActivity(Long activityId, Long studentId);
