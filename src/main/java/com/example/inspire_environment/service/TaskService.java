@@ -16,4 +16,6 @@ public interface TaskService {
     List<TaskResponseDTO> getTasksByActivity(Long activityId);
 
     List<TaskResponseDTO> getTasksByStudent(Long studentId);
+
+    List<TaskResponseDTO> getAllTasks();
 }

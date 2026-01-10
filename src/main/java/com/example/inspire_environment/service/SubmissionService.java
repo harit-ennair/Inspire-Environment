@@ -26,4 +26,8 @@ public interface SubmissionService {
     List<SubmissionResponseDTO> getSubmissionsByTask(Long taskId);
 
     List<SubmissionResponseDTO> getMySubmissions(Long studentId);
+
+    List<SubmissionResponseDTO> getSubmissionsByStudent(Long studentId);
+
+    List<SubmissionResponseDTO> getAllSubmissions();
 }
