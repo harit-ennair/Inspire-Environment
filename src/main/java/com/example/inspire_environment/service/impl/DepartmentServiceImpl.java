@@ -67,6 +67,13 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+    public DepartmentResponseDTO getDepartmentByName(String name) {
+        Department department = departmentRepository.findByName(name)
+                .orElseThrow(() -> new RuntimeException("Department not found with name: " + name));
+        return departmentMapper.toResponseDTO(department);
+    }
+
+    @Override
     public void deleteDepartment(Long id) {
         if (!departmentRepository.existsById(id)) {
             throw new RuntimeException("Department not found with id: " + id);

@@ -4,11 +4,13 @@ import com.example.inspire_environment.dto.request.ActivityRequestDTO;
 import com.example.inspire_environment.dto.response.ActivityResponseDTO;
 import com.example.inspire_environment.entity.Activity;
 import com.example.inspire_environment.entity.Attendance;
+import com.example.inspire_environment.entity.Staff;
 import com.example.inspire_environment.entity.Student;
 import com.example.inspire_environment.enums.AttendanceStatus;
 import com.example.inspire_environment.mapper.ActivityMapper;
 import com.example.inspire_environment.repository.ActivityRepository;
 import com.example.inspire_environment.repository.AttendanceRepository;
+import com.example.inspire_environment.repository.StaffRepository;
 import com.example.inspire_environment.repository.StudentRepository;
 import com.example.inspire_environment.service.ActivityService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ public class ActivityServiceImpl implements ActivityService {
 
     private final ActivityRepository activityRepository;
     private final StudentRepository studentRepository;
+    private final StaffRepository staffRepository;
     private final AttendanceRepository attendanceRepository;
     private final ActivityMapper activityMapper;
 
@@ -117,6 +120,17 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
+    public void assignStaffToActivity(Long activityId, Long staffId) {
+        Activity activity = activityRepository.findById(activityId)
+                .orElseThrow(() -> new RuntimeException("Activity not found with id: " + activityId));
+        Staff staff = staffRepository.findById(staffId)
+                .orElseThrow(() -> new RuntimeException("Staff not found with id: " + staffId));
+
+        activity.setManagedBy(staff);
+        activityRepository.save(activity);
+    }
+
+    @Override
     public void assignAllStudentsByDepartmentToActivity(Long activityId, Long departmentId) {
         Activity activity = activityRepository.findById(activityId)
                 .orElseThrow(() -> new RuntimeException("Activity not found with id: " + activityId));
@@ -145,6 +159,13 @@ public class ActivityServiceImpl implements ActivityService {
 
         attendanceRepository.findByStudentIdAndActivityId(studentId, activityId)
                 .ifPresent(attendanceRepository::delete);
+    }
+
+    @Override
+    public void deleteActivity(Long id) {
+        Activity activity = activityRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Activity not found with id: " + id));
+        activityRepository.delete(activity);
     }
 
     @Override

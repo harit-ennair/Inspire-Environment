@@ -28,8 +28,12 @@ public interface ActivityService {
 
     void assignStudentToActivity(Long activityId, Long studentId);
 
+    void assignStaffToActivity(Long activityId, Long staffId);
+
     void assignAllStudentsByDepartmentToActivity(Long activityId, Long departmentId);
 
     void removeStudentFromActivity(Long activityId, Long studentId);
+
+    void deleteActivity(Long id);
 
 }
