@@ -2,7 +2,7 @@ package com.example.inspire_environment.mapper;
 import com.example.inspire_environment.dto.request.AttendanceRequestDTO;
 import com.example.inspire_environment.dto.response.AttendanceResponseDTO;
 import com.example.inspire_environment.entity.Attendance;
-import com.example.inspire_environment.enums.AttendanceStatus;
+import com.example.inspire_environment.enums.PresenceStatus;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -28,12 +28,12 @@ public interface AttendanceMapper {
     void updateEntityFromDTO(AttendanceRequestDTO dto, @MappingTarget Attendance attendance);
 
     @Named("attendanceStatusToString")
-    default String attendanceStatusToString(AttendanceStatus status) {
+    default String attendanceStatusToString(PresenceStatus status) {
         return status != null ? status.name() : null;
     }
 
     @Named("stringToAttendanceStatus")
-    default AttendanceStatus stringToAttendanceStatus(String status) {
-        return status != null ? AttendanceStatus.valueOf(status) : null;
+    default PresenceStatus stringToAttendanceStatus(String status) {
+        return status != null ? PresenceStatus.valueOf(status) : null;
     }
 }

@@ -6,7 +6,7 @@ import com.example.inspire_environment.entity.Activity;
 import com.example.inspire_environment.entity.Attendance;
 import com.example.inspire_environment.entity.Staff;
 import com.example.inspire_environment.entity.Student;
-import com.example.inspire_environment.enums.AttendanceStatus;
+import com.example.inspire_environment.enums.PresenceStatus;
 import com.example.inspire_environment.mapper.ActivityMapper;
 import com.example.inspire_environment.repository.ActivityRepository;
 import com.example.inspire_environment.repository.AttendanceRepository;
@@ -114,7 +114,7 @@ public class ActivityServiceImpl implements ActivityService {
             Attendance attendance = new Attendance();
             attendance.setActivity(activity);
             attendance.setStudent(student);
-            attendance.setStatus(AttendanceStatus.PENDING);
+            attendance.setStatus(PresenceStatus.PENDING);
             attendanceRepository.save(attendance);
         }
     }
@@ -143,7 +143,7 @@ public class ActivityServiceImpl implements ActivityService {
                 Attendance attendance = new Attendance();
                 attendance.setActivity(activity);
                 attendance.setStudent(student);
-                attendance.setStatus(AttendanceStatus.PENDING);
+                attendance.setStatus(PresenceStatus.PENDING);
                 attendanceRepository.save(attendance);
             }
         }

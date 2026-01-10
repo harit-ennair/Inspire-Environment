@@ -1,6 +1,6 @@
 package com.example.inspire_environment.entity;
 
-import com.example.inspire_environment.enums.AttendanceStatus;
+import com.example.inspire_environment.enums.PresenceStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +22,7 @@ public class Attendance {
     private LocalDateTime checkInTime;
 
     @Enumerated(EnumType.STRING)
-    private AttendanceStatus status;
+    private PresenceStatus status;
 
     @ManyToOne
     private Student student;
