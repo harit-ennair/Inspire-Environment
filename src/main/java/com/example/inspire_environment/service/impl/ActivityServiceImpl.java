@@ -7,6 +7,7 @@ import com.example.inspire_environment.entity.Attendance;
 import com.example.inspire_environment.entity.Staff;
 import com.example.inspire_environment.entity.Student;
 import com.example.inspire_environment.enums.PresenceStatus;
+import com.example.inspire_environment.exception.ResourceNotFoundException;
 import com.example.inspire_environment.mapper.ActivityMapper;
 import com.example.inspire_environment.repository.ActivityRepository;
 import com.example.inspire_environment.repository.AttendanceRepository;
@@ -39,7 +40,7 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public ActivityResponseDTO updateActivity(Long id, ActivityRequestDTO dto) {
         Activity activity = activityRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Activity not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Activity", "id", id));
 
         if (dto.getTitle() != null) {
             activity.setTitle(dto.getTitle());
@@ -164,7 +165,7 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public void deleteActivity(Long id) {
         Activity activity = activityRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Activity not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Activity", "id", id));
         activityRepository.delete(activity);
     }
 

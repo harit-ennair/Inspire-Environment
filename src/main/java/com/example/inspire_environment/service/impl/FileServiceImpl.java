@@ -4,6 +4,7 @@ import com.example.inspire_environment.dto.request.FileRequestDTO;
 import com.example.inspire_environment.dto.response.FileResponseDTO;
 import com.example.inspire_environment.entity.File;
 import com.example.inspire_environment.entity.Submission;
+import com.example.inspire_environment.exception.ResourceNotFoundException;
 import com.example.inspire_environment.mapper.FileMapper;
 import com.example.inspire_environment.repository.FileRepository;
 import com.example.inspire_environment.repository.SubmissionRepository;
@@ -66,13 +67,13 @@ public class FileServiceImpl implements FileService {
     @Override
     public FileResponseDTO updateFile(Long id, FileRequestDTO fileRequestDTO) {
         File existingFile = fileRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("File not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("File", "id", id));
 
         fileMapper.updateEntityFromDTO(fileRequestDTO, existingFile);
 
         if (fileRequestDTO.getSubmissionId() != null) {
             Submission submission = submissionRepository.findById(fileRequestDTO.getSubmissionId())
-                    .orElseThrow(() -> new RuntimeException("Submission not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Submission", "id", fileRequestDTO.getSubmissionId()));
             existingFile.setSubmission(submission);
         }
 
@@ -83,7 +84,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public void deleteFile(Long id) {
         if (!fileRepository.existsById(id)) {
-            throw new RuntimeException("File not found");
+            throw new ResourceNotFoundException("File", "id", id);
         }
         fileRepository.deleteById(id);
     }
