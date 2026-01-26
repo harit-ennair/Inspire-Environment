@@ -4,5 +4,5 @@ public enum PresenceStatus {
     PENDING,
     PRESENT,
     ABSENT,
-    LEFT
+    LATE
 }

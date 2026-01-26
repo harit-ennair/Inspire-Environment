@@ -59,7 +59,7 @@ public class PresenceServiceImpl implements PresenceService {
                 .orElseThrow(() -> new RuntimeException("No active check-in found for student"));
 
         activePresence.setCheckOutTime(LocalDateTime.now());
-//        activePresence.setStatus(PresenceStatus.LEFT);
+        // activePresence.setStatus(PresenceStatus.LEFT);
 
         Presence savedPresence = presenceRepository.save(activePresence);
         return presenceMapper.toResponseDTO(savedPresence);

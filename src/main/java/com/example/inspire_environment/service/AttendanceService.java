@@ -8,6 +8,8 @@ public interface AttendanceService {
 
     AttendanceResponseDTO checkIn(Long activityId, Long studentId);
 
+    AttendanceResponseDTO updateStatus(Long attendanceId, String status);
+
     List<AttendanceResponseDTO> getAttendancesByActivity(Long activityId);
 
     List<AttendanceResponseDTO> getAttendancesByStudent(Long studentId);
