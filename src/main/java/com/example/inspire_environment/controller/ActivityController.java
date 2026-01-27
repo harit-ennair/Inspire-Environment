@@ -3,76 +3,107 @@ package com.example.inspire_environment.controller;
 import com.example.inspire_environment.dto.request.ActivityRequestDTO;
 import com.example.inspire_environment.dto.response.ActivityResponseDTO;
 import com.example.inspire_environment.entity.Activity;
-import com.example.inspire_environment.mapper.ActivityMapper;
-import com.example.inspire_environment.repository.ActivityRepository;
+import com.example.inspire_environment.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/activities")
 public class ActivityController {
 
     @Autowired
-    private ActivityRepository activityRepository;
-
-    @Autowired
-    private ActivityMapper activityMapper;
+    private ActivityService activityService;
 
     @GetMapping
     public ResponseEntity<List<ActivityResponseDTO>> getAllActivities() {
-        List<Activity> activities = activityRepository.findAll();
-        List<ActivityResponseDTO> activityDTOs = activities.stream()
-                .map(activityMapper::toResponseDTO)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(activityDTOs);
+        List<ActivityResponseDTO> activities = activityService.getAllActivities();
+        return ResponseEntity.ok(activities);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ActivityResponseDTO> getActivityById(@PathVariable Long id) {
-        Optional<Activity> activity = activityRepository.findById(id);
-        if (activity.isPresent()) {
-            ActivityResponseDTO activityDTO = activityMapper.toResponseDTO(activity.get());
-            return ResponseEntity.ok(activityDTO);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        ActivityResponseDTO activity = activityService.getActivityById(id);
+        return ResponseEntity.ok(activity);
     }
 
     @PostMapping
-    public RequestEntity<ActivityRequestDTO> createActivity(@RequestBody ActivityRequestDTO activityRequestDTO) {
-        Activity activity = activityMapper.toEntity(activityRequestDTO);
-        Activity savedActivity = activityRepository.save(activity);
-        ActivityRequestDTO activityDTO = activityMapper.toRequestDTO(savedActivity);
-        return RequestEntity.post("/api/activities").body(activityDTO);
+    public ResponseEntity<ActivityResponseDTO> createActivity(@RequestBody ActivityRequestDTO activityRequestDTO) {
+        ActivityResponseDTO activity = activityService.createActivity(activityRequestDTO);
+        return ResponseEntity.ok(activity);
     }
 
     @PutMapping("/{id}")
-    public RequestEntity<ActivityRequestDTO> updateActivity(@PathVariable Long id, @RequestBody ActivityRequestDTO activityRequestDTO) {
-        Optional<Activity> optionalActivity = activityRepository.findById(id);
-        if (optionalActivity.isPresent()) {
-            Activity activity = optionalActivity.get();
-            activityMapper.updateEntityFromDTO(activityRequestDTO, activity);
-            Activity updatedActivity = activityRepository.save(activity);
-            ActivityRequestDTO activityDTO = activityMapper.toRequestDTO(updatedActivity);
-            return RequestEntity.ok(activityDTO);
-        } else {
-            return RequestEntity.notFound().build();
-        }
+    public ResponseEntity<ActivityRequestDTO> updateActivity(@PathVariable Long id, @RequestBody ActivityRequestDTO activityRequestDTO) {
+        ActivityRequestDTO activity = activityService.updateActivity(id, activityRequestDTO);
+        return ResponseEntity.ok(activity);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteActivity(@PathVariable Long id) {
-        if (activityRepository.existsById(id)) {
-            activityRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        activityService.deleteActivity(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/student/{studentId}")
+    public ResponseEntity<List<ActivityResponseDTO>> getActivitiesByStudent(@PathVariable Long studentId) {
+        List<ActivityResponseDTO> activities = activityService.getActivitiesByStudent(studentId);
+        return ResponseEntity.ok(activities);
+    }
+
+    @GetMapping("/managed-by/{managedBy}")
+    public ResponseEntity<List<ActivityResponseDTO>> getActivitiesManagedBy(@PathVariable String managedBy) {
+        List<ActivityResponseDTO> activities = activityService.getActivitiesManagedBy(managedBy);
+        return ResponseEntity.ok(activities);
+    }
+
+    @GetMapping("/department/{departmentId}")
+    public ResponseEntity<List<ActivityResponseDTO>> getActivitiesByDepartment(@PathVariable Long departmentId) {
+        List<ActivityResponseDTO> activities = activityService.getActivitiesByDepartment(departmentId);
+        return ResponseEntity.ok(activities);
+    }
+
+    @GetMapping("/this-week/student/{studentId}")
+    public ResponseEntity<List<ActivityResponseDTO>> getActivitiesThatWeekByStudent(@PathVariable Long studentId) {
+        List<ActivityResponseDTO> activities = activityService.getActivitiesThatWeekByStudent(studentId);
+        return ResponseEntity.ok(activities);
+    }
+
+    @GetMapping("/this-week/department/{departmentId}")
+    public ResponseEntity<List<ActivityResponseDTO>> getActivitiesThatWeekByDepartment(@PathVariable Long departmentId) {
+        List<ActivityResponseDTO> activities = activityService.getActivitiesThatWeekByDepartment(departmentId);
+        return ResponseEntity.ok(activities);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Activity>> findByTitleContainingIgnoreCase(@RequestParam String title) {
+        List<Activity> activities = activityService.findByTitleContainingIgnoreCase(title);
+        return ResponseEntity.ok(activities);
+    }
+
+    @PostMapping("/{activityId}/assign-student/{studentId}")
+    public ResponseEntity<Void> assignStudentToActivity(@PathVariable Long activityId, @PathVariable Long studentId) {
+        activityService.assignStudentToActivity(activityId, studentId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{activityId}/assign-staff/{staffId}")
+    public ResponseEntity<Void> assignStaffToActivity(@PathVariable Long activityId, @PathVariable Long staffId) {
+        activityService.assignStaffToActivity(activityId, staffId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{activityId}/assign-department/{departmentId}")
+    public ResponseEntity<Void> assignAllStudentsByDepartmentToActivity(@PathVariable Long activityId, @PathVariable Long departmentId) {
+        activityService.assignAllStudentsByDepartmentToActivity(activityId, departmentId);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{activityId}/remove-student/{studentId}")
+    public ResponseEntity<Void> removeStudentFromActivity(@PathVariable Long activityId, @PathVariable Long studentId) {
+        activityService.removeStudentFromActivity(activityId, studentId);
+        return ResponseEntity.noContent().build();
     }
 }

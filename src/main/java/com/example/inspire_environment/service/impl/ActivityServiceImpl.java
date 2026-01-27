@@ -34,11 +34,16 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public ActivityResponseDTO createActivity(ActivityRequestDTO dto) {
         Activity activity = activityMapper.toEntity(dto);
+        if (dto.getManagedBy() != 0) {
+            Staff staff = staffRepository.findById(dto.getManagedBy())
+                    .orElseThrow(() -> new ResourceNotFoundException("Staff", "id", dto.getManagedBy()));
+            activity.setManagedBy(staff);
+        }
         return activityMapper.toResponseDTO(activityRepository.save(activity));
     }
 
     @Override
-    public ActivityResponseDTO updateActivity(Long id, ActivityRequestDTO dto) {
+    public ActivityRequestDTO updateActivity(Long id, ActivityRequestDTO dto) {
         Activity activity = activityRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Activity", "id", id));
 
@@ -54,11 +59,20 @@ public class ActivityServiceImpl implements ActivityService {
         if (dto.getEndTime() != null) {
             activity.setEndTime(dto.getEndTime());
         }
-        if (dto.getManagedBy() != null) {
-            activity.setManagedBy(dto.getManagedBy());
+        if (dto.getManagedBy() != 0) {
+            Staff staff = staffRepository.findById(dto.getManagedBy())
+                    .orElseThrow(() -> new ResourceNotFoundException("Staff", "id", dto.getManagedBy()));
+            activity.setManagedBy(staff);
         }
 
-        return activityMapper.toResponseDTO(activityRepository.save(activity));
+        return activityMapper.toRequestDTO(activityRepository.save(activity));
+    }
+
+    @Override
+    public ActivityResponseDTO getActivityById(Long id) {
+        Activity activity = activityRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Activity", "id", id));
+        return activityMapper.toResponseDTO(activity);
     }
 
     @Override

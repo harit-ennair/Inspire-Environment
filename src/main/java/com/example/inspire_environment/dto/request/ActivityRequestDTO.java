@@ -12,5 +12,5 @@ public class ActivityRequestDTO {
     private ActivityType type; // SESSION, VISIT, WORKSHOP
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private Staff managedBy;
+    private long managedBy;
 }

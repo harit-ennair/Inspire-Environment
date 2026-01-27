@@ -10,7 +10,9 @@ public interface ActivityService {
 
     ActivityResponseDTO createActivity(ActivityRequestDTO dto);
 
-    ActivityResponseDTO updateActivity(Long id, ActivityRequestDTO dto);
+    ActivityRequestDTO updateActivity(Long id, ActivityRequestDTO dto);
+
+    ActivityResponseDTO getActivityById(Long id);
 
     List<ActivityResponseDTO> getAllActivities(); // Admin / Staff
 

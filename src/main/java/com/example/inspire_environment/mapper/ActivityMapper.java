@@ -12,12 +12,17 @@ import org.mapstruct.Named;
 public interface ActivityMapper {
     @Mapping(source = "type", target = "type", qualifiedByName = "activityTypeToString")
     @Mapping(source = "managedBy.firstName", target = "managedBy")
+    @Mapping(source = "startTime", target = "startDate")
+    @Mapping(source = "endTime", target = "endDate")
     @Mapping(target = "tasks", source = "tasks")
     ActivityResponseDTO toResponseDTO(Activity activity);
 
+    @Mapping(source = "managedBy.id", target = "managedBy")
+    ActivityRequestDTO toRequestDTO(Activity activity);
+
     @Mapping(source = "type", target = "type", qualifiedByName = "stringToActivityType")
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "managedBy", ignore = true)
+    @Mapping(source = "managedBy", target = "managedBy.id")
     @Mapping(target = "tasks", ignore = true)
     @Mapping(target = "attendances", ignore = true)
     Activity toEntity(ActivityRequestDTO dto);
