@@ -50,6 +50,7 @@ public class StaffServiceImpl implements StaffService {
             staff.setFirstName(staffDto.getUser().getFirstName());
             staff.setLastName(staffDto.getUser().getLastName());
             staff.setEmail(staffDto.getUser().getEmail());
+            staff.setPassword(staffDto.getUser().getPassword());
 
             // Set role (default to STAFF if not specified)
             if (staffDto.getUser().getRoleId() != null) {
@@ -97,6 +98,11 @@ public class StaffServiceImpl implements StaffService {
             // Update last name if specified
             if (staffDto.getUser().getLastName() != null) {
                 staff.setLastName(staffDto.getUser().getLastName());
+            }
+
+            // Update password if specified
+            if (staffDto.getUser().getPassword() != null) {
+                staff.setPassword(staffDto.getUser().getPassword());
             }
 
             // Update email if specified (with conflict check)
