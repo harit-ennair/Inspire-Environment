@@ -103,36 +103,49 @@ public class StudentServiceImpl implements StudentService {
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student", "id", id));
 
-        // Check if student code already exists (excluding current student)
-        studentRepository.findByStudentCode(studentDto.getStudentCode())
-                .ifPresent(existingStudent -> {
-                    if (!existingStudent.getId().equals(id)) {
-                        throw new ConflictException("Student with code '" + studentDto.getStudentCode() + "' already exists");
-                    }
-                });
-
-        // Check if email already exists (excluding current student)
-        studentRepository.findByEmail(studentDto.getUser().getEmail())
-                .ifPresent(existingStudent -> {
-                    if (!existingStudent.getId().equals(id)) {
-                        throw new ConflictException("Student with email '" + studentDto.getUser().getEmail() + "' already exists");
-                    }
-                });
-
-        studentMapper.updateEntityFromDTO(studentDto, student);
-
-        // Update role if provided
-        if (studentDto.getUser().getRoleId() != null) {
-            Role role = roleRepository.findById(studentDto.getUser().getRoleId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Role", "id", studentDto.getUser().getRoleId()));
-            student.setRole(role);
+        // Update student code if provided
+        if (studentDto.getStudentCode() != null) {
+            // Check if student code already exists (excluding current student)
+            studentRepository.findByStudentCode(studentDto.getStudentCode())
+                    .ifPresent(existingStudent -> {
+                        if (!existingStudent.getId().equals(id)) {
+                            throw new ConflictException("Student with code '" + studentDto.getStudentCode() + "' already exists");
+                        }
+                    });
+            student.setStudentCode(studentDto.getStudentCode());
         }
 
-        // Update department if provided
-        if (studentDto.getUser().getDepartmentId() != null) {
-            Department department = departmentRepository.findById(studentDto.getUser().getDepartmentId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Department", "id", studentDto.getUser().getDepartmentId()));
-            student.setDepartment(department);
+        // Update user fields if provided
+        if (studentDto.getUser() != null) {
+            if (studentDto.getUser().getFirstName() != null) {
+                student.setFirstName(studentDto.getUser().getFirstName());
+            }
+            if (studentDto.getUser().getLastName() != null) {
+                student.setLastName(studentDto.getUser().getLastName());
+            }
+            if (studentDto.getUser().getEmail() != null) {
+                // Check if email already exists (excluding current student)
+                studentRepository.findByEmail(studentDto.getUser().getEmail())
+                        .ifPresent(existingStudent -> {
+                            if (!existingStudent.getId().equals(id)) {
+                                throw new ConflictException("Student with email '" + studentDto.getUser().getEmail() + "' already exists");
+                            }
+                        });
+                student.setEmail(studentDto.getUser().getEmail());
+            }
+            if (studentDto.getUser().getPassword() != null) {
+                student.setPassword(studentDto.getUser().getPassword());
+            }
+            if (studentDto.getUser().getRoleId() != null) {
+                Role role = roleRepository.findById(studentDto.getUser().getRoleId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Role", "id", studentDto.getUser().getRoleId()));
+                student.setRole(role);
+            }
+            if (studentDto.getUser().getDepartmentId() != null) {
+                Department department = departmentRepository.findById(studentDto.getUser().getDepartmentId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Department", "id", studentDto.getUser().getDepartmentId()));
+                student.setDepartment(department);
+            }
         }
 
         studentRepository.save(student);

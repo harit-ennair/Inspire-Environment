@@ -83,31 +83,46 @@ public class StaffServiceImpl implements StaffService {
         Staff staff = staffRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Staff", "id", id));
 
-        // Check if email already exists (excluding current staff)
-        if (staffDto.getUser() != null && staffDto.getUser().getEmail() != null) {
-            staffRepository.findByEmail(staffDto.getUser().getEmail())
-                    .ifPresent(existingStaff -> {
-                        if (!existingStaff.getId().equals(id)) {
-                            throw new ConflictException("Staff with email '" + staffDto.getUser().getEmail() + "' already exists");
-                        }
-                    });
+        // Update position if specified
+        if (staffDto.getPosition() != null) {
+            staff.setPosition(staffDto.getPosition());
         }
 
-        // Update staff fields
-        staffMapper.updateEntityFromDTO(staffDto, staff);
+        if (staffDto.getUser() != null) {
+            // Update first name if specified
+            if (staffDto.getUser().getFirstName() != null) {
+                staff.setFirstName(staffDto.getUser().getFirstName());
+            }
 
-        // Update role if specified
-        if (staffDto.getUser() != null && staffDto.getUser().getRoleId() != null) {
-            Role role = roleRepository.findById(staffDto.getUser().getRoleId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Role", "id", staffDto.getUser().getRoleId()));
-            staff.setRole(role);
-        }
+            // Update last name if specified
+            if (staffDto.getUser().getLastName() != null) {
+                staff.setLastName(staffDto.getUser().getLastName());
+            }
 
-        // Update department if specified
-        if (staffDto.getUser() != null && staffDto.getUser().getDepartmentId() != null) {
-            Department department = departmentRepository.findById(staffDto.getUser().getDepartmentId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Department", "id", staffDto.getUser().getDepartmentId()));
-            staff.setDepartment(department);
+            // Update email if specified (with conflict check)
+            if (staffDto.getUser().getEmail() != null) {
+                staffRepository.findByEmail(staffDto.getUser().getEmail())
+                        .ifPresent(existingStaff -> {
+                            if (!existingStaff.getId().equals(id)) {
+                                throw new ConflictException("Staff with email '" + staffDto.getUser().getEmail() + "' already exists");
+                            }
+                        });
+                staff.setEmail(staffDto.getUser().getEmail());
+            }
+
+            // Update role if specified
+            if (staffDto.getUser().getRoleId() != null) {
+                Role role = roleRepository.findById(staffDto.getUser().getRoleId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Role", "id", staffDto.getUser().getRoleId()));
+                staff.setRole(role);
+            }
+
+            // Update department if specified
+            if (staffDto.getUser().getDepartmentId() != null) {
+                Department department = departmentRepository.findById(staffDto.getUser().getDepartmentId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Department", "id", staffDto.getUser().getDepartmentId()));
+                staff.setDepartment(department);
+            }
         }
 
         staffRepository.save(staff);
