@@ -107,9 +107,9 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public void assignStudentToActivity(Long activityId, Long studentId) {
         Activity activity = activityRepository.findById(activityId)
-                .orElseThrow(() -> new RuntimeException("Activity not found with id: " + activityId));
+                .orElseThrow(() -> new ResourceNotFoundException("Activity", "id", activityId));
         Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found with id: " + studentId));
+                .orElseThrow(() -> new ResourceNotFoundException("Student", "id", studentId));
 
         if (attendanceRepository.findByStudentIdAndActivityId(studentId, activityId).isEmpty()) {
             Attendance attendance = new Attendance();
@@ -123,9 +123,9 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public void assignStaffToActivity(Long activityId, Long staffId) {
         Activity activity = activityRepository.findById(activityId)
-                .orElseThrow(() -> new RuntimeException("Activity not found with id: " + activityId));
+                .orElseThrow(() -> new ResourceNotFoundException("Activity", "id", activityId));
         Staff staff = staffRepository.findById(staffId)
-                .orElseThrow(() -> new RuntimeException("Staff not found with id: " + staffId));
+                .orElseThrow(() -> new ResourceNotFoundException("Staff", "id", staffId));
 
         activity.setManagedBy(staff);
         activityRepository.save(activity);
@@ -134,7 +134,7 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public void assignAllStudentsByDepartmentToActivity(Long activityId, Long departmentId) {
         Activity activity = activityRepository.findById(activityId)
-                .orElseThrow(() -> new RuntimeException("Activity not found with id: " + activityId));
+                .orElseThrow(() -> new ResourceNotFoundException("Activity", "id", activityId));
 
         // Get all students from the department
         List<Student> students = studentRepository.findByDepartmentId(departmentId);
@@ -154,9 +154,9 @@ public class ActivityServiceImpl implements ActivityService {
     public void removeStudentFromActivity(Long activityId, Long studentId) {
 
         activityRepository.findById(activityId)
-                .orElseThrow(() -> new RuntimeException("Activity not found with id: " + activityId));
+                .orElseThrow(() -> new ResourceNotFoundException("Activity", "id", activityId));
         studentRepository.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found with id: " + studentId));
+                .orElseThrow(() -> new ResourceNotFoundException("Student", "id", studentId));
 
         attendanceRepository.findByStudentIdAndActivityId(studentId, activityId)
                 .ifPresent(attendanceRepository::delete);

@@ -3,6 +3,8 @@ package com.example.inspire_environment.service.impl;
 import com.example.inspire_environment.dto.request.RoleRequestDTO;
 import com.example.inspire_environment.dto.response.RoleResponseDTO;
 import com.example.inspire_environment.entity.Role;
+import com.example.inspire_environment.exception.ConflictException;
+import com.example.inspire_environment.exception.ResourceNotFoundException;
 import com.example.inspire_environment.mapper.RoleMapper;
 import com.example.inspire_environment.repository.RoleRepository;
 import com.example.inspire_environment.service.RoleService;
@@ -26,7 +28,7 @@ public class RoleServiceImpl implements RoleService {
         // Check if role with the same name already exists
         roleRepository.findByName(roleRequestDTO.getName())
                 .ifPresent(role -> {
-                    throw new IllegalArgumentException("Role with name '" + roleRequestDTO.getName() + "' already exists");
+                    throw new ConflictException("Role with name '" + roleRequestDTO.getName() + "' already exists");
                 });
 
         Role role = roleMapper.toEntity(roleRequestDTO);
@@ -41,13 +43,13 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public RoleRequestDTO updateRole(Long roleId, RoleRequestDTO roleRequestDTO) {
         Role existingRole = roleRepository.findById(roleId)
-                .orElseThrow(() -> new IllegalArgumentException("Role not found with id: " + roleId));
+                .orElseThrow(() -> new ResourceNotFoundException("Role", "id", roleId));
 
         // Check if updating to a name that already exists (excluding current role)
         roleRepository.findByName(roleRequestDTO.getName())
                 .ifPresent(role -> {
                     if (!role.getId().equals(roleId)) {
-                        throw new IllegalArgumentException("Role with name '" + roleRequestDTO.getName() + "' already exists");
+                        throw new ConflictException("Role with name '" + roleRequestDTO.getName() + "' already exists");
                     }
                 });
 
@@ -64,7 +66,7 @@ public class RoleServiceImpl implements RoleService {
     @Transactional(readOnly = true)
     public RoleResponseDTO getRoleById(Long roleId) {
         Role role = roleRepository.findById(roleId)
-                .orElseThrow(() -> new IllegalArgumentException("Role not found with id: " + roleId));
+                .orElseThrow(() -> new ResourceNotFoundException("Role", "id", roleId));
         return roleMapper.toResponseDTO(role);
     }
 
@@ -79,7 +81,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void deleteRole(Long roleId) {
         if (!roleRepository.existsById(roleId)) {
-            throw new IllegalArgumentException("Role not found with id: " + roleId);
+            throw new ResourceNotFoundException("Role", "id", roleId);
         }
         roleRepository.deleteById(roleId);
     }

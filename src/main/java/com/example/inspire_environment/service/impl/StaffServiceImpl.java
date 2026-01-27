@@ -6,6 +6,8 @@ import com.example.inspire_environment.dto.response.StaffResponseDTO;
 import com.example.inspire_environment.entity.Department;
 import com.example.inspire_environment.entity.Role;
 import com.example.inspire_environment.entity.Staff;
+import com.example.inspire_environment.exception.ConflictException;
+import com.example.inspire_environment.exception.ResourceNotFoundException;
 import com.example.inspire_environment.mapper.ActivityMapper;
 import com.example.inspire_environment.mapper.StaffMapper;
 import com.example.inspire_environment.repository.ActivityRepository;
@@ -32,12 +34,12 @@ public class StaffServiceImpl implements StaffService {
     private final ActivityMapper activityMapper;
 
     @Override
-    public StaffRequestDTO createStaff(StaffResponseDTO staffDto) {
+    public StaffRequestDTO createStaff(StaffRequestDTO staffDto) {
         // Check if email already exists
         if (staffDto.getUser() != null && staffDto.getUser().getEmail() != null) {
             staffRepository.findByEmail(staffDto.getUser().getEmail())
                     .ifPresent(existingStaff -> {
-                        throw new IllegalArgumentException("Staff with email '" + staffDto.getUser().getEmail() + "' already exists");
+                        throw new ConflictException("Staff with email '" + staffDto.getUser().getEmail() + "' already exists");
                     });
         }
 
@@ -52,18 +54,18 @@ public class StaffServiceImpl implements StaffService {
             // Set role (default to STAFF if not specified)
             if (staffDto.getUser().getRoleName() != null) {
                 Role role = roleRepository.findByName(staffDto.getUser().getRoleName())
-                        .orElseThrow(() -> new RuntimeException("Role not found: " + staffDto.getUser().getRoleName()));
+                        .orElseThrow(() -> new ResourceNotFoundException("Role", "name", staffDto.getUser().getRoleName()));
                 staff.setRole(role);
             } else {
                 Role defaultRole = roleRepository.findByName("STAFF")
-                        .orElseThrow(() -> new RuntimeException("Default STAFF role not found"));
+                        .orElseThrow(() -> new ResourceNotFoundException("Default STAFF role not found"));
                 staff.setRole(defaultRole);
             }
 
             // Set department if specified
             if (staffDto.getUser().getDepartmentName() != null) {
                 Department department = departmentRepository.findByName(staffDto.getUser().getDepartmentName())
-                        .orElseThrow(() -> new RuntimeException("Department not found: " + staffDto.getUser().getDepartmentName()));
+                        .orElseThrow(() -> new ResourceNotFoundException("Department", "name", staffDto.getUser().getDepartmentName()));
                 staff.setDepartment(department);
             }
         }
@@ -79,14 +81,14 @@ public class StaffServiceImpl implements StaffService {
     @Override
     public StaffRequestDTO updateStaff(Long id, StaffRequestDTO staffDto) {
         Staff staff = staffRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Staff not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Staff", "id", id));
 
         // Check if email already exists (excluding current staff)
         if (staffDto.getUser() != null && staffDto.getUser().getEmail() != null) {
             staffRepository.findByEmail(staffDto.getUser().getEmail())
                     .ifPresent(existingStaff -> {
                         if (!existingStaff.getId().equals(id)) {
-                            throw new IllegalArgumentException("Staff with email '" + staffDto.getUser().getEmail() + "' already exists");
+                            throw new ConflictException("Staff with email '" + staffDto.getUser().getEmail() + "' already exists");
                         }
                     });
         }
@@ -97,14 +99,14 @@ public class StaffServiceImpl implements StaffService {
         // Update role if specified
         if (staffDto.getUser() != null && staffDto.getUser().getRoleId() != null) {
             Role role = roleRepository.findById(staffDto.getUser().getRoleId())
-                    .orElseThrow(() -> new RuntimeException("Role not found with id: " + staffDto.getUser().getRoleId()));
+                    .orElseThrow(() -> new ResourceNotFoundException("Role", "id", staffDto.getUser().getRoleId()));
             staff.setRole(role);
         }
 
         // Update department if specified
         if (staffDto.getUser() != null && staffDto.getUser().getDepartmentId() != null) {
             Department department = departmentRepository.findById(staffDto.getUser().getDepartmentId())
-                    .orElseThrow(() -> new RuntimeException("Department not found with id: " + staffDto.getUser().getDepartmentId()));
+                    .orElseThrow(() -> new ResourceNotFoundException("Department", "id", staffDto.getUser().getDepartmentId()));
             staff.setDepartment(department);
         }
 
@@ -115,7 +117,7 @@ public class StaffServiceImpl implements StaffService {
     @Override
     public void deleteStaff(Long id) {
         if (!staffRepository.existsById(id)) {
-            throw new RuntimeException("Staff not found with id: " + id);
+            throw new ResourceNotFoundException("Staff", "id", id);
         }
         staffRepository.deleteById(id);
     }
@@ -124,7 +126,7 @@ public class StaffServiceImpl implements StaffService {
     @Transactional(readOnly = true)
     public StaffResponseDTO getStaffById(Long id) {
         Staff staff = staffRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Staff not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Staff", "id", id));
         return staffMapper.toResponseDTO(staff);
     }
 
@@ -133,7 +135,7 @@ public class StaffServiceImpl implements StaffService {
     public List<ActivityResponseDTO> getManagedActivities(Long staffId) {
         // Verify staff exists
         if (!staffRepository.existsById(staffId)) {
-            throw new RuntimeException("Staff not found with id: " + staffId);
+            throw new ResourceNotFoundException("Staff", "id", staffId);
         }
 
         return activityRepository.findByManagedById(staffId)
@@ -156,7 +158,7 @@ public class StaffServiceImpl implements StaffService {
     public List<StaffResponseDTO> getAllStaffsByDepartment(Long departmentId) {
         // Verify department exists
         if (!departmentRepository.existsById(departmentId)) {
-            throw new RuntimeException("Department not found with id: " + departmentId);
+            throw new ResourceNotFoundException("Department", "id", departmentId);
         }
 
         return staffRepository.findByDepartmentId(departmentId)

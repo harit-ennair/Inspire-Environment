@@ -5,6 +5,8 @@ import com.example.inspire_environment.dto.response.PresenceResponseDTO;
 import com.example.inspire_environment.entity.Presence;
 import com.example.inspire_environment.entity.Student;
 import com.example.inspire_environment.enums.PresenceStatus;
+import com.example.inspire_environment.exception.ConflictException;
+import com.example.inspire_environment.exception.ResourceNotFoundException;
 import com.example.inspire_environment.mapper.PresenceMapper;
 import com.example.inspire_environment.repository.PresenceRepository;
 import com.example.inspire_environment.repository.StudentRepository;
@@ -26,7 +28,7 @@ public class PresenceServiceImpl implements PresenceService {
     @Override
     public PresenceResponseDTO checkIn(Long studentId) {
         Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found with id: " + studentId));
+                .orElseThrow(() -> new ResourceNotFoundException("Student", "id", studentId));
 
         // Check if student already has an active presence (checked in but not checked out)
         List<Presence> activePresences = presenceRepository.findActivePresences();
@@ -34,7 +36,7 @@ public class PresenceServiceImpl implements PresenceService {
                 .anyMatch(p -> p.getStudent().getId().equals(studentId));
 
         if (alreadyCheckedIn) {
-            throw new RuntimeException("Student is already checked in");
+            throw new ConflictException("Student is already checked in");
         }
 
         Presence presence = new Presence();
@@ -49,14 +51,14 @@ public class PresenceServiceImpl implements PresenceService {
     @Override
     public PresenceResponseDTO checkOut(Long studentId) {
         studentRepository.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found with id: " + studentId));
+                .orElseThrow(() -> new ResourceNotFoundException("Student", "id", studentId));
 
         // Find active presence for this student
         List<Presence> activePresences = presenceRepository.findActivePresences();
         Presence activePresence = activePresences.stream()
                 .filter(p -> p.getStudent().getId().equals(studentId))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("No active check-in found for student"));
+                .orElseThrow(() -> new ResourceNotFoundException("No active check-in found for student with id: " + studentId));
 
         activePresence.setCheckOutTime(LocalDateTime.now());
         // activePresence.setStatus(PresenceStatus.LEFT);
@@ -68,7 +70,7 @@ public class PresenceServiceImpl implements PresenceService {
     @Override
     public PresenceResponseDTO createPresence(PresenceRequestDTO dto) {
         Student student = studentRepository.findById(dto.getStudentId())
-                .orElseThrow(() -> new RuntimeException("Student not found with id: " + dto.getStudentId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Student", "id", dto.getStudentId()));
 
         Presence presence = presenceMapper.toEntity(dto);
         presence.setStudent(student);
@@ -88,7 +90,7 @@ public class PresenceServiceImpl implements PresenceService {
     @Override
     public PresenceResponseDTO updatePresence(Long id, PresenceRequestDTO dto) {
         Presence presence = presenceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Presence not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Presence", "id", id));
 
         if (dto.getCheckInTime() != null) {
             presence.setCheckInTime(dto.getCheckInTime());
@@ -101,7 +103,7 @@ public class PresenceServiceImpl implements PresenceService {
         }
         if (dto.getStudentId() != null && !dto.getStudentId().equals(presence.getStudent().getId())) {
             Student student = studentRepository.findById(dto.getStudentId())
-                    .orElseThrow(() -> new RuntimeException("Student not found with id: " + dto.getStudentId()));
+                    .orElseThrow(() -> new ResourceNotFoundException("Student", "id", dto.getStudentId()));
             presence.setStudent(student);
         }
 
@@ -112,7 +114,7 @@ public class PresenceServiceImpl implements PresenceService {
     @Override
     public PresenceResponseDTO getPresenceById(Long id) {
         Presence presence = presenceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Presence not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Presence", "id", id));
         return presenceMapper.toResponseDTO(presence);
     }
 
@@ -127,7 +129,7 @@ public class PresenceServiceImpl implements PresenceService {
     @Override
     public List<PresenceResponseDTO> getPresencesByStudent(Long studentId) {
         studentRepository.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found with id: " + studentId));
+                .orElseThrow(() -> new ResourceNotFoundException("Student", "id", studentId));
 
         return presenceRepository.findByStudentId(studentId)
                 .stream()
@@ -154,7 +156,7 @@ public class PresenceServiceImpl implements PresenceService {
     @Override
     public List<PresenceResponseDTO> getPresencesByStudentAndDateRange(Long studentId, LocalDateTime start, LocalDateTime end) {
         studentRepository.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found with id: " + studentId));
+                .orElseThrow(() -> new ResourceNotFoundException("Student", "id", studentId));
 
         return presenceRepository.findByStudentIdAndCheckInTimeBetween(studentId, start, end)
                 .stream()
@@ -173,8 +175,7 @@ public class PresenceServiceImpl implements PresenceService {
     @Override
     public void deletePresence(Long id) {
         Presence presence = presenceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Presence not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Presence", "id", id));
         presenceRepository.delete(presence);
     }
 }
-

@@ -5,6 +5,9 @@ import com.example.inspire_environment.entity.Activity;
 import com.example.inspire_environment.entity.Attendance;
 import com.example.inspire_environment.entity.Student;
 import com.example.inspire_environment.enums.PresenceStatus;
+import com.example.inspire_environment.exception.BadRequestException;
+import com.example.inspire_environment.exception.ConflictException;
+import com.example.inspire_environment.exception.ResourceNotFoundException;
 import com.example.inspire_environment.mapper.AttendanceMapper;
 import com.example.inspire_environment.repository.ActivityRepository;
 import com.example.inspire_environment.repository.AttendanceRepository;
@@ -32,15 +35,15 @@ public class AttendanceServiceImpl implements AttendanceService {
     public AttendanceResponseDTO checkIn(Long activityId, Long studentId) {
         // Validate student exists
         Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found with id: " + studentId));
+                .orElseThrow(() -> new ResourceNotFoundException("Student", "id", studentId));
 
         // Validate activity exists
         Activity activity = activityRepository.findById(activityId)
-                .orElseThrow(() -> new RuntimeException("Activity not found with id: " + activityId));
+                .orElseThrow(() -> new ResourceNotFoundException("Activity", "id", activityId));
 
         // Check if student already checked in for this activity
         if (attendanceRepository.findByStudentIdAndActivityId(studentId, activityId).isPresent()) {
-            throw new RuntimeException("Student already checked in for this activity");
+            throw new ConflictException("Student already checked in for this activity");
         }
 
         LocalDateTime activityStartTimePlus15Minites = activity.getStartDate().plusMinutes(15);
@@ -64,14 +67,14 @@ public class AttendanceServiceImpl implements AttendanceService {
     public AttendanceResponseDTO updateStatus(Long attendanceId, String status) {
         // Validate attendance exists
         Attendance attendance = attendanceRepository.findById(attendanceId)
-                .orElseThrow(() -> new RuntimeException("Attendance not found with id: " + attendanceId));
+                .orElseThrow(() -> new ResourceNotFoundException("Attendance", "id", attendanceId));
 
         // Update status
         try {
             PresenceStatus presenceStatus = PresenceStatus.valueOf(status.toUpperCase());
             attendance.setStatus(presenceStatus);
         } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Invalid status value: " + status);
+            throw new BadRequestException("Invalid status value: " + status);
         }
 
         Attendance updatedAttendance = attendanceRepository.save(attendance);
@@ -82,7 +85,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     public List<AttendanceResponseDTO> getAttendancesByActivity(Long activityId) {
         // Validate activity exists
         if (!activityRepository.existsById(activityId)) {
-            throw new RuntimeException("Activity not found with id: " + activityId);
+            throw new ResourceNotFoundException("Activity", "id", activityId);
         }
 
         List<Attendance> attendances = attendanceRepository.findByActivityId(activityId);
@@ -95,7 +98,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     public List<AttendanceResponseDTO> getAttendancesByStudent(Long studentId) {
         // Validate student exists
         if (!studentRepository.existsById(studentId)) {
-            throw new RuntimeException("Student not found with id: " + studentId);
+            throw new ResourceNotFoundException("Student", "id", studentId);
         }
 
         List<Attendance> attendances = attendanceRepository.findByStudentId(studentId);

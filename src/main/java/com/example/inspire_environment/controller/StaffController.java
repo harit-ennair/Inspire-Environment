@@ -19,7 +19,7 @@ public class StaffController {
     private StaffService staffService;
 
     @PostMapping
-    public ResponseEntity<StaffRequestDTO> createStaff(@RequestBody StaffResponseDTO staffDto) {
+    public ResponseEntity<StaffRequestDTO> createStaff(@RequestBody StaffRequestDTO staffDto) {
         StaffRequestDTO response = staffService.createStaff(staffDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

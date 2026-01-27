@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface StaffService {
 
-    StaffRequestDTO createStaff(StaffResponseDTO staffDto);
+    StaffRequestDTO createStaff(StaffRequestDTO staffDto);
 
     StaffRequestDTO updateStaff(Long id, StaffRequestDTO staffDto);
 

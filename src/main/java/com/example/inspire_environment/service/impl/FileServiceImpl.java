@@ -30,7 +30,7 @@ public class FileServiceImpl implements FileService {
 
         if (fileRequestDTO.getSubmissionId() != null) {
             Submission submission = submissionRepository.findById(fileRequestDTO.getSubmissionId())
-                    .orElseThrow(() -> new RuntimeException("Submission not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Submission", "id", fileRequestDTO.getSubmissionId()));
             file.setSubmission(submission);
         }
 
@@ -42,7 +42,7 @@ public class FileServiceImpl implements FileService {
     @Transactional(readOnly = true)
     public FileResponseDTO getFileById(Long id) {
         File file = fileRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("File not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("File", "id", id));
         return fileMapper.toResponseDTO(file);
     }
 

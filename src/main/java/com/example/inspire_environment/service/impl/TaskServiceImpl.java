@@ -4,6 +4,7 @@ import com.example.inspire_environment.dto.request.TaskRequestDTO;
 import com.example.inspire_environment.dto.response.TaskResponseDTO;
 import com.example.inspire_environment.entity.Activity;
 import com.example.inspire_environment.entity.Task;
+import com.example.inspire_environment.exception.ResourceNotFoundException;
 import com.example.inspire_environment.mapper.TaskMapper;
 import com.example.inspire_environment.repository.ActivityRepository;
 import com.example.inspire_environment.repository.TaskRepository;
@@ -30,7 +31,7 @@ public class TaskServiceImpl implements TaskService {
         // Set the activity if activityId is provided
         if (dto.getActivityId() != null) {
             Activity activity = activityRepository.findById(dto.getActivityId())
-                    .orElseThrow(() -> new RuntimeException("Activity not found with id: " + dto.getActivityId()));
+                    .orElseThrow(() -> new ResourceNotFoundException("Activity", "id", dto.getActivityId()));
             task.setActivity(activity);
         }
 
@@ -40,14 +41,14 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskResponseDTO updateTask(Long taskId, TaskRequestDTO dto) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new RuntimeException("Task not found with id: " + taskId));
+                .orElseThrow(() -> new ResourceNotFoundException("Task", "id", taskId));
 
         taskMapper.updateEntityFromDTO(dto, task);
 
         // Update the activity if activityId is provided
         if (dto.getActivityId() != null) {
             Activity activity = activityRepository.findById(dto.getActivityId())
-                    .orElseThrow(() -> new RuntimeException("Activity not found with id: " + dto.getActivityId()));
+                    .orElseThrow(() -> new ResourceNotFoundException("Activity", "id", dto.getActivityId()));
             task.setActivity(activity);
         }
 
@@ -57,7 +58,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteTask(Long taskId) {
         if (!taskRepository.existsById(taskId)) {
-            throw new RuntimeException("Task not found with id: " + taskId);
+            throw new ResourceNotFoundException("Task", "id", taskId);
         }
         taskRepository.deleteById(taskId);
     }

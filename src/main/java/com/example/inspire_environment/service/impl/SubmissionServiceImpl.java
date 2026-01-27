@@ -6,6 +6,7 @@ import com.example.inspire_environment.entity.File;
 import com.example.inspire_environment.entity.Student;
 import com.example.inspire_environment.entity.Submission;
 import com.example.inspire_environment.entity.Task;
+import com.example.inspire_environment.exception.ResourceNotFoundException;
 import com.example.inspire_environment.mapper.SubmissionMapper;
 import com.example.inspire_environment.repository.StudentRepository;
 import com.example.inspire_environment.repository.SubmissionRepository;
@@ -33,10 +34,10 @@ public class SubmissionServiceImpl implements SubmissionService {
     @Override
     public SubmissionResponseDTO submitTask(Long taskId, Long studentId, FileRequestDTO fileDto) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new RuntimeException("Task not found with id: " + taskId));
+                .orElseThrow(() -> new ResourceNotFoundException("Task", "id", taskId));
 
         Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found with id: " + studentId));
+                .orElseThrow(() -> new ResourceNotFoundException("Student", "id", studentId));
 
         // Check if submission already exists
         Optional<Submission> existingSubmission = submissionRepository.findByStudentIdAndTaskId(studentId, taskId);
@@ -78,10 +79,10 @@ public class SubmissionServiceImpl implements SubmissionService {
     @Override
     public void assignStudentToTask(Long taskId, Long studentId) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new RuntimeException("Task not found with id: " + taskId));
+                .orElseThrow(() -> new ResourceNotFoundException("Task", "id", taskId));
 
         Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found with id: " + studentId));
+                .orElseThrow(() -> new ResourceNotFoundException("Student", "id", studentId));
 
         // Check if submission already exists
         Optional<Submission> existingSubmission = submissionRepository.findByStudentIdAndTaskId(studentId, taskId);
@@ -99,7 +100,7 @@ public class SubmissionServiceImpl implements SubmissionService {
     @Override
     public void assignStudentsByDepartmentToTask(Long taskId, Long departmentId) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new RuntimeException("Task not found with id: " + taskId));
+                .orElseThrow(() -> new ResourceNotFoundException("Task", "id", taskId));
 
         // Get all students from the department
         List<Student> students = studentRepository.findByDepartmentId(departmentId);

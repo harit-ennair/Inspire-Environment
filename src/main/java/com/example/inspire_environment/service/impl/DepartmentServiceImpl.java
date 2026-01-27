@@ -3,6 +3,8 @@ package com.example.inspire_environment.service.impl;
 import com.example.inspire_environment.dto.request.DepartmentRequestDTO;
 import com.example.inspire_environment.dto.response.DepartmentResponseDTO;
 import com.example.inspire_environment.entity.Department;
+import com.example.inspire_environment.exception.ConflictException;
+import com.example.inspire_environment.exception.ResourceNotFoundException;
 import com.example.inspire_environment.mapper.DepartmentMapper;
 import com.example.inspire_environment.repository.DepartmentRepository;
 import com.example.inspire_environment.service.DepartmentService;
@@ -25,7 +27,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         // Check if department with the same name already exists
         departmentRepository.findByName(dto.getName())
                 .ifPresent(existingDept -> {
-                    throw new IllegalArgumentException("Department with name '" + dto.getName() + "' already exists");
+                    throw new ConflictException("Department with name '" + dto.getName() + "' already exists");
                 });
 
         Department department = departmentMapper.toEntity(dto);
@@ -35,13 +37,13 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public DepartmentResponseDTO updateDepartment(Long id, DepartmentRequestDTO dto) {
         Department department = departmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Department not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Department", "id", id));
 
         // Check if department with the same name already exists (excluding current department)
         departmentRepository.findByName(dto.getName())
                 .ifPresent(existingDept -> {
                     if (!existingDept.getId().equals(id)) {
-                        throw new IllegalArgumentException("Department with name '" + dto.getName() + "' already exists");
+                        throw new ConflictException("Department with name '" + dto.getName() + "' already exists");
                     }
                 });
 
@@ -62,21 +64,21 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Transactional(readOnly = true)
     public DepartmentResponseDTO getDepartmentById(Long id) {
         Department department = departmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Department not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Department", "id", id));
         return departmentMapper.toResponseDTO(department);
     }
 
     @Override
     public DepartmentResponseDTO getDepartmentByName(String name) {
         Department department = departmentRepository.findByName(name)
-                .orElseThrow(() -> new RuntimeException("Department not found with name: " + name));
+                .orElseThrow(() -> new ResourceNotFoundException("Department", "name", name));
         return departmentMapper.toResponseDTO(department);
     }
 
     @Override
     public void deleteDepartment(Long id) {
         if (!departmentRepository.existsById(id)) {
-            throw new RuntimeException("Department not found with id: " + id);
+            throw new ResourceNotFoundException("Department", "id", id);
         }
         departmentRepository.deleteById(id);
     }
