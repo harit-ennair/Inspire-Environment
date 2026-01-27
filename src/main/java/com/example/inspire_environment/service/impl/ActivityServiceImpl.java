@@ -48,11 +48,11 @@ public class ActivityServiceImpl implements ActivityService {
         if (dto.getType() != null) {
             activity.setType(dto.getType());
         }
-        if (dto.getStartDate() != null) {
-            activity.setStartDate(dto.getStartDate());
+        if (dto.getStartTime() != null) {
+            activity.setStartTime(dto.getStartTime());
         }
-        if (dto.getEndDate() != null) {
-            activity.setEndDate(dto.getEndDate());
+        if (dto.getEndTime() != null) {
+            activity.setEndTime(dto.getEndTime());
         }
         if (dto.getManagedBy() != null) {
             activity.setManagedBy(dto.getManagedBy());
@@ -212,8 +212,8 @@ public class ActivityServiceImpl implements ActivityService {
     private List<ActivityResponseDTO> weekActivities(List<Activity> activities, LocalDateTime startOfWeek, LocalDateTime endOfWeek) {
         return activities.stream()
                 .filter(activity -> {
-                    LocalDateTime activityStart = activity.getStartDate();
-                    LocalDateTime activityEnd = activity.getEndDate();
+                    LocalDateTime activityStart = activity.getStartTime();
+                    LocalDateTime activityEnd = activity.getEndTime();
                     return (activityStart != null && activityEnd != null) &&
                            ((activityStart.isAfter(startOfWeek) || activityStart.isEqual(startOfWeek)) &&
                             (activityStart.isBefore(endOfWeek) || activityStart.isEqual(endOfWeek)));

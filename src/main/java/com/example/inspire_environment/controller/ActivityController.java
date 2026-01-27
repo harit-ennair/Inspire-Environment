@@ -6,7 +6,7 @@ import com.example.inspire_environment.entity.Activity;
 import com.example.inspire_environment.mapper.ActivityMapper;
 import com.example.inspire_environment.repository.ActivityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,24 +45,24 @@ public class ActivityController {
     }
 
     @PostMapping
-    public ResponseEntity<ActivityResponseDTO> createActivity(@RequestBody ActivityRequestDTO activityRequestDTO) {
+    public RequestEntity<ActivityRequestDTO> createActivity(@RequestBody ActivityRequestDTO activityRequestDTO) {
         Activity activity = activityMapper.toEntity(activityRequestDTO);
         Activity savedActivity = activityRepository.save(activity);
-        ActivityResponseDTO activityDTO = activityMapper.toResponseDTO(savedActivity);
-        return ResponseEntity.status(HttpStatus.CREATED).body(activityDTO);
+        ActivityRequestDTO activityDTO = activityMapper.toRequestDTO(savedActivity);
+        return RequestEntity.post("/api/activities").body(activityDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ActivityResponseDTO> updateActivity(@PathVariable Long id, @RequestBody ActivityRequestDTO activityRequestDTO) {
+    public RequestEntity<ActivityRequestDTO> updateActivity(@PathVariable Long id, @RequestBody ActivityRequestDTO activityRequestDTO) {
         Optional<Activity> optionalActivity = activityRepository.findById(id);
         if (optionalActivity.isPresent()) {
             Activity activity = optionalActivity.get();
             activityMapper.updateEntityFromDTO(activityRequestDTO, activity);
             Activity updatedActivity = activityRepository.save(activity);
-            ActivityResponseDTO activityDTO = activityMapper.toResponseDTO(updatedActivity);
-            return ResponseEntity.ok(activityDTO);
+            ActivityRequestDTO activityDTO = activityMapper.toRequestDTO(updatedActivity);
+            return RequestEntity.ok(activityDTO);
         } else {
-            return ResponseEntity.notFound().build();
+            return RequestEntity.notFound().build();
         }
     }
 

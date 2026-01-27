@@ -19,10 +19,10 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
     @Query("SELECT DISTINCT a FROM Activity a JOIN a.attendances att WHERE att.student.id = :studentId")
     List<Activity> findByStudents_Id(Long studentId);
 
-    @Query("SELECT a FROM Activity a WHERE a.startDate >= :startDate AND a.endDate <= :endDate")
+    @Query("SELECT a FROM Activity a WHERE a.startTime >= :startDate AND a.endTime <= :endDate")
     List<Activity> findByDateRange(LocalDateTime startDate, LocalDateTime endDate);
 
-    @Query("SELECT a FROM Activity a WHERE a.startDate <= :now AND a.endDate >= :now")
+    @Query("SELECT a FROM Activity a WHERE a.startTime <= :now AND a.endTime >= :now")
     List<Activity> findActiveActivities(LocalDateTime now);
 
     List<Activity> findByTitleContainingIgnoreCase(String title);

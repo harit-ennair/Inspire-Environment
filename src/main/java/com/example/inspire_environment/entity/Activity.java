@@ -26,8 +26,8 @@ public class Activity {
     @Enumerated(EnumType.STRING)
     private ActivityType type;
 
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
 
     @ManyToOne
     @JoinColumn(name = "staff_id")

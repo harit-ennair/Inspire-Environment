@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class ActivityRequestDTO {
     private String title;
     private ActivityType type; // SESSION, VISIT, WORKSHOP
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private Staff managedBy;
 }

@@ -46,7 +46,7 @@ public class AttendanceServiceImpl implements AttendanceService {
             throw new ConflictException("Student already checked in for this activity");
         }
 
-        LocalDateTime activityStartTimePlus15Minites = activity.getStartDate().plusMinutes(15);
+        LocalDateTime activityStartTimePlus15Minites = activity.getStartTime().plusMinutes(15);
 
         // Create new attendance record
         Attendance attendance = new Attendance();
