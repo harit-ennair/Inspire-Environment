@@ -52,9 +52,9 @@ public class StaffServiceImpl implements StaffService {
             staff.setEmail(staffDto.getUser().getEmail());
 
             // Set role (default to STAFF if not specified)
-            if (staffDto.getUser().getRoleName() != null) {
-                Role role = roleRepository.findByName(staffDto.getUser().getRoleName())
-                        .orElseThrow(() -> new ResourceNotFoundException("Role", "name", staffDto.getUser().getRoleName()));
+            if (staffDto.getUser().getRoleId() != null) {
+                Role role = roleRepository.findById(staffDto.getUser().getRoleId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Role", "id", staffDto.getUser().getRoleId()));
                 staff.setRole(role);
             } else {
                 Role defaultRole = roleRepository.findByName("STAFF")
@@ -63,9 +63,9 @@ public class StaffServiceImpl implements StaffService {
             }
 
             // Set department if specified
-            if (staffDto.getUser().getDepartmentName() != null) {
-                Department department = departmentRepository.findByName(staffDto.getUser().getDepartmentName())
-                        .orElseThrow(() -> new ResourceNotFoundException("Department", "name", staffDto.getUser().getDepartmentName()));
+            if (staffDto.getUser().getDepartmentId() != null) {
+                Department department = departmentRepository.findById(staffDto.getUser().getDepartmentId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Department", "id", staffDto.getUser().getDepartmentId()));
                 staff.setDepartment(department);
             }
         }
