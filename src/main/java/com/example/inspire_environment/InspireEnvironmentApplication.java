@@ -78,7 +78,7 @@ public class InspireEnvironmentApplication {
                 staffInspire.setFirstName("Admin");
                 staffInspire.setLastName("Inspire");
                 staffInspire.setEmail("admin@gmail.com");
-                staffInspire.setPassword("InspirePa$$w0rd");
+                staffInspire.setPassword("Pa$$w0rd");
                 staffInspire.setPosition("Administrator");
                 staffInspire.setRole(roleADMIN);
                 staffInspire.setDepartment(deptInspie);
