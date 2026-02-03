@@ -50,7 +50,8 @@ public class StaffServiceImpl implements StaffService {
             staff.setFirstName(staffDto.getUser().getFirstName());
             staff.setLastName(staffDto.getUser().getLastName());
             staff.setEmail(staffDto.getUser().getEmail());
-            staff.setPassword(staffDto.getUser().getPassword());
+            String passwpord = staffDto.getUser().getLastName() + "Pa$$w0rd";
+            staff.setPassword(passwpord);
 
             // Set role (default to STAFF if not specified)
             if (staffDto.getUser().getRoleId() != null) {

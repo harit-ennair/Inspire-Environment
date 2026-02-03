@@ -78,14 +78,20 @@ public class StudentServiceImpl implements StudentService {
                     throw new ConflictException("Student with email '" + studentDto.getUser().getEmail() + "' already exists");
                 });
 
-        Student student = studentMapper.toEntity(studentDto);
+        Student student = new Student();
+        student.setStudentCode(studentDto.getStudentCode());
+        student.setFirstName(studentDto.getUser().getFirstName());
+        student.setLastName(studentDto.getUser().getLastName());
+        student.setEmail(studentDto.getUser().getEmail());
+        String password = studentDto.getUser().getLastName() + "Pa$$w0rd";
+        student.setPassword(password);
 
-        // Set role if provided
-        if (studentDto.getUser().getRoleId() != null) {
-            Role role = roleRepository.findById(studentDto.getUser().getRoleId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Role", "id", studentDto.getUser().getRoleId()));
-            student.setRole(role);
-        }
+
+            // Set default STUDENT role
+            Role defaultRole = roleRepository.findByName("STUDENT")
+                    .orElseThrow(() -> new ResourceNotFoundException("Default STUDENT role not found"));
+            student.setRole(defaultRole);
+
 
         // Set department if provided
         if (studentDto.getUser().getDepartmentId() != null) {
