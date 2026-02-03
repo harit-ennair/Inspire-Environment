@@ -19,6 +19,7 @@ import com.example.inspire_environment.repository.RoleRepository;
 import com.example.inspire_environment.repository.StudentRepository;
 import com.example.inspire_environment.service.StudentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +38,7 @@ public class StudentServiceImpl implements StudentService {
     private final StudentMapper studentMapper;
     private final ActivityMapper activityMapper;
     private final AttendanceMapper attendanceMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional(readOnly = true)
@@ -84,7 +86,7 @@ public class StudentServiceImpl implements StudentService {
         student.setLastName(studentDto.getUser().getLastName());
         student.setEmail(studentDto.getUser().getEmail());
         String password = studentDto.getUser().getLastName() + "Pa$$w0rd";
-        student.setPassword(password);
+        student.setPassword(passwordEncoder.encode(password));
 
 
             // Set default STUDENT role
@@ -140,7 +142,7 @@ public class StudentServiceImpl implements StudentService {
                 student.setEmail(studentDto.getUser().getEmail());
             }
             if (studentDto.getUser().getPassword() != null) {
-                student.setPassword(studentDto.getUser().getPassword());
+                student.setPassword(passwordEncoder.encode(studentDto.getUser().getPassword()));
             }
             if (studentDto.getUser().getRoleId() != null) {
                 Role role = roleRepository.findById(studentDto.getUser().getRoleId())

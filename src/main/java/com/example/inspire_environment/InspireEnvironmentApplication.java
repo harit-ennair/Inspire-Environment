@@ -10,6 +10,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @SpringBootApplication
@@ -20,7 +21,7 @@ public class InspireEnvironmentApplication {
     }
 
     @Bean
-    CommandLineRunner init(DepartmentRepository departmentRepository, RoleRepository roleRepository, StaffRepository staffRepository) {
+    CommandLineRunner init(DepartmentRepository departmentRepository, RoleRepository roleRepository, StaffRepository staffRepository, PasswordEncoder passwordEncoder) {
         return args -> {
 
             if(roleRepository.count() == 0 && departmentRepository.count() == 0 && staffRepository.count() == 0)
@@ -78,7 +79,7 @@ public class InspireEnvironmentApplication {
                 staffInspire.setFirstName("Admin");
                 staffInspire.setLastName("Inspire");
                 staffInspire.setEmail("admin@gmail.com");
-                staffInspire.setPassword("Pa$$w0rd");
+                staffInspire.setPassword(passwordEncoder.encode("Pa$$w0rd"));
                 staffInspire.setPosition("Administrator");
                 staffInspire.setRole(roleADMIN);
                 staffInspire.setDepartment(deptInspie);

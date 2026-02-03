@@ -16,6 +16,7 @@ import com.example.inspire_environment.repository.RoleRepository;
 import com.example.inspire_environment.repository.StaffRepository;
 import com.example.inspire_environment.service.StaffService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +33,7 @@ public class StaffServiceImpl implements StaffService {
     private final ActivityRepository activityRepository;
     private final StaffMapper staffMapper;
     private final ActivityMapper activityMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public StaffRequestDTO createStaff(StaffRequestDTO staffDto) {
@@ -51,7 +53,7 @@ public class StaffServiceImpl implements StaffService {
             staff.setLastName(staffDto.getUser().getLastName());
             staff.setEmail(staffDto.getUser().getEmail());
             String passwpord = staffDto.getUser().getLastName() + "Pa$$w0rd";
-            staff.setPassword(passwpord);
+            staff.setPassword(passwordEncoder.encode(passwpord));
 
             // Set role (default to STAFF if not specified)
             if (staffDto.getUser().getRoleId() != null) {
@@ -103,7 +105,7 @@ public class StaffServiceImpl implements StaffService {
 
             // Update password if specified
             if (staffDto.getUser().getPassword() != null) {
-                staff.setPassword(staffDto.getUser().getPassword());
+                staff.setPassword(passwordEncoder.encode(staffDto.getUser().getPassword()));
             }
 
             // Update email if specified (with conflict check)
