@@ -18,7 +18,7 @@ public interface ActivityService {
 
     List<ActivityResponseDTO> getActivitiesByStudent(Long studentId);
 
-    List<ActivityResponseDTO> getActivitiesManagedBy(String managedBy);
+    List<ActivityResponseDTO> getActivitiesManagedBy(long managedById);
 
     List<ActivityResponseDTO> getActivitiesByDepartment(Long departmentId);
 
@@ -26,7 +26,6 @@ public interface ActivityService {
 
     List<ActivityResponseDTO> getActivitiesThatWeekByDepartment(Long departmentId);
 
-    List<Activity> findByTitleContainingIgnoreCase(String title);
 
     void assignStudentToActivity(Long activityId, Long studentId);
 

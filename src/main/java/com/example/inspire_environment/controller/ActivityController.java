@@ -54,8 +54,8 @@ public class ActivityController {
     }
 
     @GetMapping("/managed-by/{managedBy}")
-    public ResponseEntity<List<ActivityResponseDTO>> getActivitiesManagedBy(@PathVariable String managedBy) {
-        List<ActivityResponseDTO> activities = activityService.getActivitiesManagedBy(managedBy);
+    public ResponseEntity<List<ActivityResponseDTO>> getActivitiesManagedBy(@PathVariable long managedById) {
+        List<ActivityResponseDTO> activities = activityService.getActivitiesManagedBy(managedById);
         return ResponseEntity.ok(activities);
     }
 
@@ -77,11 +77,6 @@ public class ActivityController {
         return ResponseEntity.ok(activities);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<Activity>> findByTitleContainingIgnoreCase(@RequestParam("title") String title) {
-        List<Activity> activities = activityService.findByTitleContainingIgnoreCase(title);
-        return ResponseEntity.ok(activities);
-    }
 
     @PostMapping("/{activityId}/assign-student/{studentId}")
     public ResponseEntity<Void> assignStudentToActivity(@PathVariable Long activityId, @PathVariable Long studentId) {

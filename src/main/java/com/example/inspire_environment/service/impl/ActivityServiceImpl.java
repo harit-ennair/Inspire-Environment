@@ -94,8 +94,8 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public List<ActivityResponseDTO> getActivitiesManagedBy(String managedBy) {
-        return activityRepository.findByManagedBy(managedBy)
+    public List<ActivityResponseDTO> getActivitiesManagedBy(long managedById) {
+        return activityRepository.findByManagedById(managedById)
                 .stream()
                 .map(activityMapper::toResponseDTO)
                 .toList();
@@ -114,11 +114,6 @@ public class ActivityServiceImpl implements ActivityService {
                 .toList();
     }
 
-
-    @Override
-    public List<Activity> findByTitleContainingIgnoreCase(String title) {
-        return activityRepository.findByTitleContainingIgnoreCase(title);
-    }
 
     @Override
     public void assignStudentToActivity(Long activityId, Long studentId) {

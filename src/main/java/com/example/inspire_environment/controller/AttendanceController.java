@@ -31,6 +31,14 @@ public class AttendanceController {
         return ResponseEntity.ok(response);
     }
 
+    @PutMapping("/{attendanceId}/check-in-time")
+    public ResponseEntity<AttendanceResponseDTO> setCheckInTime(
+            @PathVariable Long attendanceId,
+            @RequestParam String checkInTime) {
+        AttendanceResponseDTO response = attendanceService.setcheckInTime(attendanceId, checkInTime);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/activity/{activityId}")
     public ResponseEntity<List<AttendanceResponseDTO>> getAttendancesByActivity(
             @PathVariable Long activityId) {

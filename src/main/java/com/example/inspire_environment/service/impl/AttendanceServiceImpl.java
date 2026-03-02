@@ -41,24 +41,18 @@ public class AttendanceServiceImpl implements AttendanceService {
         Activity activity = activityRepository.findById(activityId)
                 .orElseThrow(() -> new ResourceNotFoundException("Activity", "id", activityId));
 
-        // Check if student already checked in for this activity
+//         Check if student already checked in for this activity
         if (attendanceRepository.findByStudentIdAndActivityId(studentId, activityId).isPresent()) {
             throw new ConflictException("Student already checked in for this activity");
         }
 
-        LocalDateTime activityStartTimePlus15Minites = activity.getStartTime().plusMinutes(15);
 
         // Create new attendance record
         Attendance attendance = new Attendance();
         attendance.setStudent(student);
         attendance.setActivity(activity);
-        attendance.setCheckInTime(LocalDateTime.now());
+        attendance.setStatus(PresenceStatus.PRESENT);
 
-        if (attendance.getCheckInTime().isAfter(activityStartTimePlus15Minites)) {
-            attendance.setStatus(PresenceStatus.LATE);
-        } else {
-            attendance.setStatus(PresenceStatus.PRESENT);
-        }
         Attendance savedAttendance = attendanceRepository.save(attendance);
         return attendanceMapper.toResponseDTO(savedAttendance);
     }
@@ -75,6 +69,35 @@ public class AttendanceServiceImpl implements AttendanceService {
             attendance.setStatus(presenceStatus);
         } catch (IllegalArgumentException e) {
             throw new BadRequestException("Invalid status value: " + status);
+        }
+
+        Attendance updatedAttendance = attendanceRepository.save(attendance);
+        return attendanceMapper.toResponseDTO(updatedAttendance);
+    }
+
+    @Override
+    public AttendanceResponseDTO setcheckInTime(Long attendanceId, String checkInTime) {
+        // Validate attendance exists
+        Attendance attendance = attendanceRepository.findById(attendanceId)
+                .orElseThrow(() -> new ResourceNotFoundException("Attendance", "id", attendanceId));
+
+        // Get the activity from the attendance
+        Activity activity = attendance.getActivity();
+        LocalDateTime activityStartTimePlus15Minites = activity.getStartTime().plusMinutes(15);
+
+        // Update check-in time
+        try {
+            LocalDateTime parsedCheckInTime = LocalDateTime.parse(checkInTime);
+            attendance.setCheckInTime(parsedCheckInTime);
+
+            // Update status based on check-in time
+            if (parsedCheckInTime.isAfter(activityStartTimePlus15Minites)) {
+                attendance.setStatus(PresenceStatus.LATE);
+            } else {
+                attendance.setStatus(PresenceStatus.ABSENT);
+            }
+        } catch (Exception e) {
+            throw new BadRequestException("Invalid check-in time format: " + checkInTime);
         }
 
         Attendance updatedAttendance = attendanceRepository.save(attendance);

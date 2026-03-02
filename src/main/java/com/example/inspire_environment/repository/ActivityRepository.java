@@ -10,20 +10,11 @@ import java.util.List;
 
 public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
-    List<Activity> findByType(ActivityType type);
 
     List<Activity> findByManagedById(Long staffId);
 
-    List<Activity> findByManagedBy(String managedBy);
 
     @Query("SELECT DISTINCT a FROM Activity a JOIN a.attendances att WHERE att.student.id = :studentId")
     List<Activity> findByStudents_Id(Long studentId);
 
-    @Query("SELECT a FROM Activity a WHERE a.startTime >= :startDate AND a.endTime <= :endDate")
-    List<Activity> findByDateRange(LocalDateTime startDate, LocalDateTime endDate);
-
-    @Query("SELECT a FROM Activity a WHERE a.startTime <= :now AND a.endTime >= :now")
-    List<Activity> findActiveActivities(LocalDateTime now);
-
-    List<Activity> findByTitleContainingIgnoreCase(String title);
 }

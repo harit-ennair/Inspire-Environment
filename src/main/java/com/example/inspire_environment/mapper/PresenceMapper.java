@@ -13,7 +13,6 @@ import org.mapstruct.Named;
 public interface PresenceMapper {
 
     @Mapping(source = "status", target = "status", qualifiedByName = "presenceStatusToString")
-    @Mapping(target = "student", ignore = true) // Avoid circular reference
     PresenceResponseDTO toResponseDTO(Presence presence);
 
     @Mapping(source = "status", target = "status", qualifiedByName = "stringToPresenceStatus")
