@@ -24,7 +24,7 @@ public class ActivityController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ActivityResponseDTO> getActivityById(@PathVariable Long id) {
+    public ResponseEntity<ActivityResponseDTO> getActivityById(@PathVariable("id") Long id) {
         ActivityResponseDTO activity = activityService.getActivityById(id);
         return ResponseEntity.ok(activity);
     }
@@ -78,7 +78,7 @@ public class ActivityController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Activity>> findByTitleContainingIgnoreCase(@RequestParam String title) {
+    public ResponseEntity<List<Activity>> findByTitleContainingIgnoreCase(@RequestParam("title") String title) {
         List<Activity> activities = activityService.findByTitleContainingIgnoreCase(title);
         return ResponseEntity.ok(activities);
     }

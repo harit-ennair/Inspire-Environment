@@ -25,6 +25,9 @@ public abstract class User {
 
     private String password;
 
+    @Column(length = 500)
+    private String refreshToken;
+
     @ManyToOne
     private Role role;
 

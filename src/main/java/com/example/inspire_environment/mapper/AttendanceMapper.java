@@ -11,8 +11,7 @@ import org.mapstruct.Named;
 @Mapper(componentModel = "spring", uses = {StudentMapper.class, ActivityMapper.class})
 public interface AttendanceMapper {
     @Mapping(source = "status", target = "status", qualifiedByName = "attendanceStatusToString")
-    @Mapping(target = "student", ignore = true) // Student relationship is not available in entity
-    @Mapping(target = "activity", ignore = true) // Avoid circular reference
+    @Mapping(target = "student", source = "student")
     AttendanceResponseDTO toResponseDTO(Attendance attendance);
 
     @Mapping(source = "status", target = "status", qualifiedByName = "stringToAttendanceStatus")

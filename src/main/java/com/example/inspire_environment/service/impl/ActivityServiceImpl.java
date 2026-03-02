@@ -13,6 +13,7 @@ import com.example.inspire_environment.repository.ActivityRepository;
 import com.example.inspire_environment.repository.AttendanceRepository;
 import com.example.inspire_environment.repository.StaffRepository;
 import com.example.inspire_environment.repository.StudentRepository;
+import com.example.inspire_environment.repository.TaskRepository;
 import com.example.inspire_environment.service.ActivityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ public class ActivityServiceImpl implements ActivityService {
     private final StudentRepository studentRepository;
     private final StaffRepository staffRepository;
     private final AttendanceRepository attendanceRepository;
+    private final TaskRepository taskRepository;
     private final ActivityMapper activityMapper;
 
     @Override
@@ -180,6 +182,24 @@ public class ActivityServiceImpl implements ActivityService {
     public void deleteActivity(Long id) {
         Activity activity = activityRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Activity", "id", id));
+
+        // Set activity reference to null in all attendances
+        if (activity.getAttendances() != null && !activity.getAttendances().isEmpty()) {
+            activity.getAttendances().forEach(attendance -> {
+                attendance.setActivity(null);
+                attendanceRepository.save(attendance);
+            });
+        }
+
+        // Set activity reference to null in all tasks
+        if (activity.getTasks() != null && !activity.getTasks().isEmpty()) {
+            activity.getTasks().forEach(task -> {
+                task.setActivity(null);
+                taskRepository.save(task);
+            });
+        }
+
+        // Now delete the activity
         activityRepository.delete(activity);
     }
 

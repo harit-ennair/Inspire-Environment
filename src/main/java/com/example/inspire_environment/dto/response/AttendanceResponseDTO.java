@@ -10,5 +10,4 @@ public class AttendanceResponseDTO {
     private LocalDateTime checkInTime;
     private String status;
     private StudentResponseDTO student;
-    private ActivityResponseDTO activity;
 }

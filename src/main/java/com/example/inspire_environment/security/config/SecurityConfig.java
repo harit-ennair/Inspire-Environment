@@ -40,51 +40,50 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
-// ===============================================================================================================
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-//            .cors(cors -> cors.disable())
-            .csrf(csrf -> csrf.disable())
-            .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(authz -> authz
-                    // Public endpoints
-                    .requestMatchers(
-                            "/swagger-ui/**",
-                            "/v3/api-docs/**",
-                            "/swagger-resources/**",
-                            "/swagger-ui.html",
-                            "/webjars/**",
-                            "/api/auth/**"
-                    ).permitAll()
-                    
-                    // Student endpoints
-                    .requestMatchers("/api/students/me/activities").hasRole("STUDENT")
-                    .requestMatchers("/api/students/me/presence").hasRole("STUDENT")
-                    .requestMatchers("/api/students/me/submissions").hasRole("STUDENT")
-                    .requestMatchers("/api/submissions").hasRole("STUDENT")
-                    
-                    // Staff endpoints
-                    .requestMatchers("/api/activities/**").hasAnyRole("STAFF", "ADMIN")
-                    .requestMatchers("/api/tasks/**").hasAnyRole("STAFF", "ADMIN")
-                    .requestMatchers("/api/presences/**").hasAnyRole("STAFF", "ADMIN")
-                    .requestMatchers("/api/attendance/**").hasAnyRole("STAFF", "ADMIN")
-                    
-                    // Admin only endpoints
-                    .requestMatchers("/api/users/**").hasRole("ADMIN")
-                    .requestMatchers("/api/roles/**").hasRole("ADMIN")
-                    .requestMatchers("/api/departments/**").hasRole("ADMIN")
-                    .requestMatchers("/api/staff/**").hasRole("ADMIN")
-                    .requestMatchers("/api/students/**").hasRole("ADMIN")
-                    
-                    // All other requests require authentication
-                    .anyRequest().authenticated()
-            )
-            .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-            .build();
+                .csrf(csrf -> csrf.disable())
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authz -> authz
+                        // Public endpoints
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
+                                "/swagger-ui.html",
+                                "/webjars/**",
+                                "/api/auth/**"
+                        ).permitAll()
+                                .requestMatchers("/api/**").permitAll()
+//
+//                        // Student endpoints
+//                        .requestMatchers("/api/students/me/activities").hasRole("STUDENT")
+//                        .requestMatchers("/api/students/me/presence").hasRole("STUDENT")
+//                        .requestMatchers("/api/students/me/submissions").hasRole("STUDENT")
+//                        .requestMatchers("/api/submissions").hasRole("STUDENT")
+//
+//                        // Staff endpoints
+//                        .requestMatchers("/api/activities/**").hasAnyRole("STAFF", "ADMIN")
+//                        .requestMatchers("/api/tasks/**").hasAnyRole("STAFF", "ADMIN")
+//                        .requestMatchers("/api/presences/**").hasAnyRole("STAFF", "ADMIN")
+//                        .requestMatchers("/api/attendance/**").hasAnyRole("STAFF", "ADMIN")
+//
+//                        // Admin only endpoints
+//                        .requestMatchers("/api/roles/**").hasRole("ADMIN")
+//                        .requestMatchers("/api/departments/**").hasRole("ADMIN")
+//                        .requestMatchers("/api/staff/**").hasRole("ADMIN")
+//                        .requestMatchers("/api/students/**").hasRole("ADMIN")
+//
+//                        // All other requests require authentication
+//                        .anyRequest().authenticated()
+                )
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 
     @Bean
@@ -99,5 +98,4 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", config);
         return source;
     }
-// ===============================================================================================================
 }
