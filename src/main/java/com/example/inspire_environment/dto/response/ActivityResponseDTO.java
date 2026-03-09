@@ -14,6 +14,5 @@ public class ActivityResponseDTO {
     private LocalDateTime endDate;
     private String managedBy;
     private StaffResponseDTO staff;
-    private List<TaskResponseDTO> tasks;
     private List<AttendanceResponseDTO> attendances;
 }

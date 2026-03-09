@@ -1,4 +1,5 @@
 package com.example.inspire_environment.mapper;
+
 import com.example.inspire_environment.dto.request.ActivityRequestDTO;
 import com.example.inspire_environment.dto.response.ActivityResponseDTO;
 import com.example.inspire_environment.dto.response.ActivitySummaryDTO;
@@ -9,13 +10,12 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 
-@Mapper(componentModel = "spring", uses = {StaffMapper.class, AttendanceMapper.class})
+@Mapper(componentModel = "spring", uses = { StaffMapper.class, AttendanceMapper.class })
 public interface ActivityMapper {
     @Mapping(source = "type", target = "type", qualifiedByName = "activityTypeToString")
     @Mapping(source = "managedBy.firstName", target = "managedBy")
     @Mapping(source = "startTime", target = "startDate")
     @Mapping(source = "endTime", target = "endDate")
-    @Mapping(target = "tasks", ignore = true)
     @Mapping(target = "staff", source = "managedBy")
     @Mapping(target = "attendances", source = "attendances")
     ActivityResponseDTO toResponseDTO(Activity activity);
@@ -32,14 +32,12 @@ public interface ActivityMapper {
     @Mapping(source = "type", target = "type", qualifiedByName = "stringToActivityType")
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "managedBy", target = "managedBy.id")
-    @Mapping(target = "tasks", ignore = true)
     @Mapping(target = "attendances", ignore = true)
     Activity toEntity(ActivityRequestDTO dto);
 
     @Mapping(source = "type", target = "type", qualifiedByName = "stringToActivityType")
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "managedBy", ignore = true)
-    @Mapping(target = "tasks", ignore = true)
     @Mapping(target = "attendances", ignore = true)
     void updateEntityFromDTO(ActivityRequestDTO dto, @MappingTarget Activity activity);
 

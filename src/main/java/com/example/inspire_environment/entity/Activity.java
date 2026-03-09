@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 @Entity
 @Table(name = "activities")
 @Data
@@ -32,9 +31,6 @@ public class Activity {
     @ManyToOne
     @JoinColumn(name = "staff_id")
     private Staff managedBy;
-
-    @OneToMany(mappedBy = "activity")
-    private List<Task> tasks;
 
     @OneToMany(mappedBy = "activity")
     private List<Attendance> attendances;

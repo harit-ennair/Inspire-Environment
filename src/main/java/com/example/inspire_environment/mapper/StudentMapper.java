@@ -1,4 +1,5 @@
 package com.example.inspire_environment.mapper;
+
 import com.example.inspire_environment.dto.request.StudentRequestDTO;
 import com.example.inspire_environment.dto.response.StudentResponseDTO;
 import com.example.inspire_environment.entity.Student;
@@ -6,7 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring", uses = {UserMapper.class})
+@Mapper(componentModel = "spring", uses = { UserMapper.class })
 public interface StudentMapper {
     @Mapping(source = "studentCode", target = "studentCode")
     @Mapping(source = "id", target = "user.id")
@@ -25,7 +26,6 @@ public interface StudentMapper {
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "department", ignore = true)
     @Mapping(target = "attendances", ignore = true)
-    @Mapping(target = "submissions", ignore = true)
     Student toEntity(StudentRequestDTO dto);
 
     @Mapping(target = "id", ignore = true)
@@ -36,6 +36,5 @@ public interface StudentMapper {
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "department", ignore = true)
     @Mapping(target = "attendances", ignore = true)
-    @Mapping(target = "submissions", ignore = true)
     void updateEntityFromDTO(StudentRequestDTO dto, @MappingTarget Student student);
 }

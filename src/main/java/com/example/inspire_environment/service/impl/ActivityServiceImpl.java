@@ -13,7 +13,6 @@ import com.example.inspire_environment.repository.ActivityRepository;
 import com.example.inspire_environment.repository.AttendanceRepository;
 import com.example.inspire_environment.repository.StaffRepository;
 import com.example.inspire_environment.repository.StudentRepository;
-import com.example.inspire_environment.repository.TaskRepository;
 import com.example.inspire_environment.service.ActivityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,7 +29,6 @@ public class ActivityServiceImpl implements ActivityService {
     private final StudentRepository studentRepository;
     private final StaffRepository staffRepository;
     private final AttendanceRepository attendanceRepository;
-    private final TaskRepository taskRepository;
     private final ActivityMapper activityMapper;
 
     @Override
@@ -82,9 +80,12 @@ public class ActivityServiceImpl implements ActivityService {
         return activityRepository.findAll()
                 .stream()
                 .sorted((a1, a2) -> {
-                    if (a1.getStartTime() == null && a2.getStartTime() == null) return 0;
-                    if (a1.getStartTime() == null) return 1;
-                    if (a2.getStartTime() == null) return -1;
+                    if (a1.getStartTime() == null && a2.getStartTime() == null)
+                        return 0;
+                    if (a1.getStartTime() == null)
+                        return 1;
+                    if (a2.getStartTime() == null)
+                        return -1;
                     return a1.getStartTime().compareTo(a2.getStartTime());
                 })
                 .map(activityMapper::toResponseDTO)
@@ -119,7 +120,6 @@ public class ActivityServiceImpl implements ActivityService {
                 .map(activityMapper::toResponseDTO)
                 .toList();
     }
-
 
     @Override
     public void assignStudentToActivity(Long activityId, Long studentId) {
@@ -192,14 +192,6 @@ public class ActivityServiceImpl implements ActivityService {
             });
         }
 
-        // Set activity reference to null in all tasks
-        if (activity.getTasks() != null && !activity.getTasks().isEmpty()) {
-            activity.getTasks().forEach(task -> {
-                task.setActivity(null);
-                taskRepository.save(task);
-            });
-        }
-
         // Now delete the activity
         activityRepository.delete(activity);
     }
@@ -232,7 +224,7 @@ public class ActivityServiceImpl implements ActivityService {
 
         return weekActivities(departmentActivities, startOfWeek, endOfWeek);
     }
-    //==============================================================================================================================================
+    // ==============================================================================================================================================
 
     private LocalDateTime[] getStartAndEndOfWeek() {
 
@@ -241,17 +233,18 @@ public class ActivityServiceImpl implements ActivityService {
         LocalDateTime startOfWeek = now.minusDays(currentDay.getValue() - 1).toLocalDate().atStartOfDay();
         LocalDateTime endOfWeek = startOfWeek.plusDays(6).toLocalDate().atTime(23, 59, 59);
 
-        return new LocalDateTime[]{startOfWeek, endOfWeek};
+        return new LocalDateTime[] { startOfWeek, endOfWeek };
     }
 
-    private List<ActivityResponseDTO> weekActivities(List<Activity> activities, LocalDateTime startOfWeek, LocalDateTime endOfWeek) {
+    private List<ActivityResponseDTO> weekActivities(List<Activity> activities, LocalDateTime startOfWeek,
+            LocalDateTime endOfWeek) {
         return activities.stream()
                 .filter(activity -> {
                     LocalDateTime activityStart = activity.getStartTime();
                     LocalDateTime activityEnd = activity.getEndTime();
                     return (activityStart != null && activityEnd != null) &&
-                           ((activityStart.isAfter(startOfWeek) || activityStart.isEqual(startOfWeek)) &&
-                            (activityStart.isBefore(endOfWeek) || activityStart.isEqual(endOfWeek)));
+                            ((activityStart.isAfter(startOfWeek) || activityStart.isEqual(startOfWeek)) &&
+                                    (activityStart.isBefore(endOfWeek) || activityStart.isEqual(endOfWeek)));
                 })
                 .map(activityMapper::toResponseDTO)
                 .toList();

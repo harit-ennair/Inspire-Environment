@@ -22,11 +22,7 @@ public class Student extends User {
     @OneToMany(mappedBy = "student")
     private List<Attendance> attendances;
 
-    @OneToMany(mappedBy = "student")
-    private List<Submission> submissions ;
-
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<Presence> presences;
-
 
 }
