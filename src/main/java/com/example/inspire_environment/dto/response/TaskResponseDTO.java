@@ -11,6 +11,6 @@ public class TaskResponseDTO {
     private String title;
     private String description;
     private LocalDateTime deadline;
-    private ActivityResponseDTO activity;
+    private ActivitySummaryDTO activity;
     private List<SubmissionResponseDTO> submissions;
 }

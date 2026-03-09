@@ -6,9 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring", uses = {SubmissionMapper.class})
+@Mapper(componentModel = "spring", uses = {SubmissionMapper.class, ActivityMapper.class})
 public interface TaskMapper {
-    @Mapping(target = "activity", ignore = true) // Avoid circular reference
     @Mapping(target = "submissions", source = "submissions")
     TaskResponseDTO toResponseDTO(Task task);
 

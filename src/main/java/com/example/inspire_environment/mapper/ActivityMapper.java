@@ -1,6 +1,7 @@
 package com.example.inspire_environment.mapper;
 import com.example.inspire_environment.dto.request.ActivityRequestDTO;
 import com.example.inspire_environment.dto.response.ActivityResponseDTO;
+import com.example.inspire_environment.dto.response.ActivitySummaryDTO;
 import com.example.inspire_environment.entity.Activity;
 import com.example.inspire_environment.enums.ActivityType;
 import org.mapstruct.Mapper;
@@ -8,16 +9,22 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 
-@Mapper(componentModel = "spring", uses = {TaskMapper.class, StaffMapper.class, AttendanceMapper.class})
+@Mapper(componentModel = "spring", uses = {StaffMapper.class, AttendanceMapper.class})
 public interface ActivityMapper {
     @Mapping(source = "type", target = "type", qualifiedByName = "activityTypeToString")
     @Mapping(source = "managedBy.firstName", target = "managedBy")
     @Mapping(source = "startTime", target = "startDate")
     @Mapping(source = "endTime", target = "endDate")
-    @Mapping(target = "tasks", source = "tasks")
+    @Mapping(target = "tasks", ignore = true)
     @Mapping(target = "staff", source = "managedBy")
     @Mapping(target = "attendances", source = "attendances")
     ActivityResponseDTO toResponseDTO(Activity activity);
+
+    @Mapping(source = "type", target = "type", qualifiedByName = "activityTypeToString")
+    @Mapping(source = "managedBy.firstName", target = "managedBy")
+    @Mapping(source = "startTime", target = "startDate")
+    @Mapping(source = "endTime", target = "endDate")
+    ActivitySummaryDTO toSummaryDTO(Activity activity);
 
     @Mapping(source = "managedBy.id", target = "managedBy")
     ActivityRequestDTO toRequestDTO(Activity activity);

@@ -81,6 +81,12 @@ public class ActivityServiceImpl implements ActivityService {
     public List<ActivityResponseDTO> getAllActivities() {
         return activityRepository.findAll()
                 .stream()
+                .sorted((a1, a2) -> {
+                    if (a1.getStartTime() == null && a2.getStartTime() == null) return 0;
+                    if (a1.getStartTime() == null) return 1;
+                    if (a2.getStartTime() == null) return -1;
+                    return a1.getStartTime().compareTo(a2.getStartTime());
+                })
                 .map(activityMapper::toResponseDTO)
                 .toList();
     }
