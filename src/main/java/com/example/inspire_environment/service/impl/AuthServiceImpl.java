@@ -39,15 +39,16 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
 
         // Return response
-        return new AuthResponse(
-                accessToken,
-                refreshToken,
-                user.getId(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getEmail(),
-                user.getRole() != null ? user.getRole().getName() : null
-        );
+        return AuthResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .tokenType("Bearer")
+                .userId(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .role(user.getRole() != null ? user.getRole().getName() : null)
+                .build();
     }
 
     @Override

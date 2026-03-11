@@ -1,12 +1,14 @@
 package com.example.inspire_environment.dto.response;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class AuthResponse {
     private String accessToken;
     private String refreshToken;
@@ -16,15 +18,5 @@ public class AuthResponse {
     private String lastName;
     private String email;
     private String role;
-
-    public AuthResponse(String accessToken, String refreshToken, Long userId, String firstName, String lastName, String email, String role) {
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
-        this.userId = userId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.role = role;
-        this.tokenType = "Bearer";
-    }
+    private String message;
 }
