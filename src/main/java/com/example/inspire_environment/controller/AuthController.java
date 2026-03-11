@@ -21,12 +21,15 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(@RequestHeader(value = "Authorization", required = false) String token) {
-        if (token == null || token.isEmpty()) {
-            return ResponseEntity.badRequest().body("Token d'autorisation manquant");
+    public ResponseEntity<String> logout(@RequestHeader String token) {
+
+
+
+        if (token != null && !token.isEmpty()) {
+            String jwtToken = token.replace("Bearer ", "");
+            authService.logout(jwtToken);
+            return ResponseEntity.ok("Déconnexion réussie");
         }
-        String jwtToken = token.replace("Bearer ", "");
-        authService.logout(jwtToken);
-        return ResponseEntity.ok("Déconnexion réussie");
+        return ResponseEntity.ok("Token manquant ou invalide");
     }
 }
