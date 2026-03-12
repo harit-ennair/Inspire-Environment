@@ -50,16 +50,16 @@ public class StaffController {
         return ResponseEntity.ok(staffs);
     }
 
-    @GetMapping("/department/{departmentId}")
-    public ResponseEntity<List<StaffResponseDTO>> getAllStaffsByDepartment(@PathVariable Long departmentId) {
-        List<StaffResponseDTO> staffs = staffService.getAllStaffsByDepartment(departmentId);
-        return ResponseEntity.ok(staffs);
-    }
+//    @GetMapping("/department/{departmentId}")
+//    public ResponseEntity<List<StaffResponseDTO>> getAllStaffsByDepartment(@PathVariable Long departmentId) {
+//        List<StaffResponseDTO> staffs = staffService.getAllStaffsByDepartment(departmentId);
+//        return ResponseEntity.ok(staffs);
+//    }
 
-    @GetMapping("/{staffId}/activities")
-    public ResponseEntity<List<ActivityResponseDTO>> getManagedActivities(@PathVariable Long staffId) {
-        List<ActivityResponseDTO> activities = staffService.getManagedActivities(staffId);
-        return ResponseEntity.ok(activities);
-    }
+//    @GetMapping("/{staffId}/activities")
+//    public ResponseEntity<List<ActivityResponseDTO>> getManagedActivities(@PathVariable Long staffId) {
+//        List<ActivityResponseDTO> activities = staffService.getManagedActivities(staffId);
+//        return ResponseEntity.ok(activities);
+//    }
 }
 

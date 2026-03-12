@@ -46,11 +46,11 @@ public class PresenceController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<PresenceResponseDTO> getPresenceById(@PathVariable Long id) {
-        PresenceResponseDTO response = presenceService.getPresenceById(id);
-        return ResponseEntity.ok(response);
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<PresenceResponseDTO> getPresenceById(@PathVariable Long id) {
+//        PresenceResponseDTO response = presenceService.getPresenceById(id);
+//        return ResponseEntity.ok(response);
+//    }
 
     @GetMapping
     public ResponseEntity<List<PresenceResponseDTO>> getAllPresences() {
@@ -64,28 +64,28 @@ public class PresenceController {
         return ResponseEntity.ok(presences);
     }
 
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<PresenceResponseDTO>> getPresencesByStatus(@PathVariable PresenceStatus status) {
-        List<PresenceResponseDTO> presences = presenceService.getPresencesByStatus(status);
-        return ResponseEntity.ok(presences);
-    }
+//    @GetMapping("/status/{status}")
+//    public ResponseEntity<List<PresenceResponseDTO>> getPresencesByStatus(@PathVariable PresenceStatus status) {
+//        List<PresenceResponseDTO> presences = presenceService.getPresencesByStatus(status);
+//        return ResponseEntity.ok(presences);
+//    }
 
-    @GetMapping("/date-range")
-    public ResponseEntity<List<PresenceResponseDTO>> getPresencesByDateRange(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
-        List<PresenceResponseDTO> presences = presenceService.getPresencesByDateRange(start, end);
-        return ResponseEntity.ok(presences);
-    }
+//    @GetMapping("/date-range")
+//    public ResponseEntity<List<PresenceResponseDTO>> getPresencesByDateRange(
+//            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+//            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+//        List<PresenceResponseDTO> presences = presenceService.getPresencesByDateRange(start, end);
+//        return ResponseEntity.ok(presences);
+//    }
 
-    @GetMapping("/student/{studentId}/date-range")
-    public ResponseEntity<List<PresenceResponseDTO>> getPresencesByStudentAndDateRange(
-            @PathVariable Long studentId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
-        List<PresenceResponseDTO> presences = presenceService.getPresencesByStudentAndDateRange(studentId, start, end);
-        return ResponseEntity.ok(presences);
-    }
+//    @GetMapping("/student/{studentId}/date-range")
+//    public ResponseEntity<List<PresenceResponseDTO>> getPresencesByStudentAndDateRange(
+//            @PathVariable Long studentId,
+//            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+//            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+//        List<PresenceResponseDTO> presences = presenceService.getPresencesByStudentAndDateRange(studentId, start, end);
+//        return ResponseEntity.ok(presences);
+//    }
 
     @GetMapping("/active")
     public ResponseEntity<List<PresenceResponseDTO>> getActivePresences() {

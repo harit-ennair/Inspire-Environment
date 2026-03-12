@@ -46,11 +46,11 @@ public class AttendanceController {
         return ResponseEntity.ok(attendances);
     }
 
-    @GetMapping("/student/{studentId}")
-    public ResponseEntity<List<AttendanceResponseDTO>> getAttendancesByStudent(
-            @PathVariable Long studentId) {
-        List<AttendanceResponseDTO> attendances = attendanceService.getAttendancesByStudent(studentId);
-        return ResponseEntity.ok(attendances);
-    }
+//    @GetMapping("/student/{studentId}")
+//    public ResponseEntity<List<AttendanceResponseDTO>> getAttendancesByStudent(
+//            @PathVariable Long studentId) {
+//        List<AttendanceResponseDTO> attendances = attendanceService.getAttendancesByStudent(studentId);
+//        return ResponseEntity.ok(attendances);
+//    }
 }
 
