@@ -143,6 +143,9 @@ public class StaffServiceImpl implements StaffService {
         if (!staffRepository.existsById(id)) {
             throw new ResourceNotFoundException("Staff", "id", id);
         }
+        if(id.equals(1L)){
+            throw new ConflictException("Cannot delete that admin");
+        }
         staffRepository.deleteById(id);
     }
 

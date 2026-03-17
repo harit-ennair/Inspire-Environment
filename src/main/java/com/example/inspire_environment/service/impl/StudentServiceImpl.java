@@ -4,7 +4,9 @@ import com.example.inspire_environment.dto.request.StudentRequestDTO;
 import com.example.inspire_environment.dto.response.ActivityResponseDTO;
 import com.example.inspire_environment.dto.response.AttendanceResponseDTO;
 import com.example.inspire_environment.dto.response.StudentResponseDTO;
+import com.example.inspire_environment.entity.Attendance;
 import com.example.inspire_environment.entity.Department;
+import com.example.inspire_environment.entity.Presence;
 import com.example.inspire_environment.entity.Role;
 import com.example.inspire_environment.entity.Student;
 import com.example.inspire_environment.exception.ConflictException;
@@ -15,6 +17,7 @@ import com.example.inspire_environment.mapper.StudentMapper;
 import com.example.inspire_environment.repository.ActivityRepository;
 import com.example.inspire_environment.repository.AttendanceRepository;
 import com.example.inspire_environment.repository.DepartmentRepository;
+import com.example.inspire_environment.repository.PresenceRepository;
 import com.example.inspire_environment.repository.RoleRepository;
 import com.example.inspire_environment.repository.StudentRepository;
 import com.example.inspire_environment.service.StudentService;
@@ -35,6 +38,7 @@ public class StudentServiceImpl implements StudentService {
     private final RoleRepository roleRepository;
     private final ActivityRepository activityRepository;
     private final AttendanceRepository attendanceRepository;
+    private final PresenceRepository presenceRepository;
     private final StudentMapper studentMapper;
     private final ActivityMapper activityMapper;
     private final AttendanceMapper attendanceMapper;
@@ -162,9 +166,21 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void deleteStudent(Long id) {
-        if (!studentRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Student", "id", id);
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student", "id", id));
+
+        // Delete all presence records associated with this student
+        List<Presence> presences = presenceRepository.findByStudentId(id);
+        if (!presences.isEmpty()) {
+            presenceRepository.deleteAll(presences);
         }
+
+        // Delete all attendance records associated with this student
+        List<Attendance> attendances = attendanceRepository.findByStudentId(id);
+        if (!attendances.isEmpty()) {
+            attendanceRepository.deleteAll(attendances);
+        }
+
         studentRepository.deleteById(id);
     }
 
