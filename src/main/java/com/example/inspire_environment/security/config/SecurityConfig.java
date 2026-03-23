@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -58,28 +59,40 @@ public class SecurityConfig {
                                 "/webjars/**",
                                 "/api/auth/**"
                         ).permitAll()
-                                .requestMatchers("/api/**").permitAll()
-//
-//                        // Student endpoints
-//                        .requestMatchers("/api/students/me/activities").hasRole("STUDENT")
-//                        .requestMatchers("/api/students/me/presence").hasRole("STUDENT")
-//                        .requestMatchers("/api/students/me/submissions").hasRole("STUDENT")
-//                        .requestMatchers("/api/submissions").hasRole("STUDENT")
-//
-//                        // Staff endpoints
-//                        .requestMatchers("/api/activities/**").hasAnyRole("STAFF", "ADMIN")
-//                        .requestMatchers("/api/tasks/**").hasAnyRole("STAFF", "ADMIN")
-//                        .requestMatchers("/api/presences/**").hasAnyRole("STAFF", "ADMIN")
-//                        .requestMatchers("/api/attendance/**").hasAnyRole("STAFF", "ADMIN")
-//
-//                        // Admin only endpoints
-//                        .requestMatchers("/api/roles/**").hasRole("ADMIN")
-//                        .requestMatchers("/api/departments/**").hasRole("ADMIN")
-//                        .requestMatchers("/api/staff/**").hasRole("ADMIN")
-//                        .requestMatchers("/api/students/**").hasRole("ADMIN")
-//
-//                        // All other requests require authentication
-//                        .anyRequest().authenticated()
+
+                        // Role & Department management (Admin only)
+                        .requestMatchers("/api/roles/**").hasRole("ADMIN")
+                        .requestMatchers("/api/departments/**").hasRole("ADMIN")
+                        
+                        // Staff management (Admin only)
+                        .requestMatchers("/api/staff/**").hasRole("ADMIN")
+
+                        // Students management
+                        .requestMatchers(HttpMethod.GET, "/api/students/**").hasAnyRole("STAFF", "ADMIN", "STUDENT")
+                        .requestMatchers(HttpMethod.POST, "/api/students/**").hasAnyRole("STAFF", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/students/**").hasAnyRole("STAFF", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/students/**").hasAnyRole("ADMIN", "STAFF")
+
+                        // Activities management
+                        .requestMatchers(HttpMethod.GET, "/api/activities/**").hasAnyRole("STAFF", "ADMIN", "STUDENT")
+                        .requestMatchers(HttpMethod.POST, "/api/activities/**").hasAnyRole("STAFF", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/activities/**").hasAnyRole("STAFF", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/activities/**").hasAnyRole("STAFF", "ADMIN")
+
+                        // Presences management
+                        .requestMatchers(HttpMethod.GET, "/api/presences/**").hasAnyRole("STAFF", "ADMIN", "STUDENT")
+                        .requestMatchers(HttpMethod.POST, "/api/presences/**").hasAnyRole("STAFF", "ADMIN", "STUDENT") // Students can check-in
+                        .requestMatchers(HttpMethod.PUT, "/api/presences/**").hasAnyRole("STAFF", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/presences/**").hasAnyRole("ADMIN", "STAFF")
+
+                        // Attendances management
+                        .requestMatchers(HttpMethod.GET, "/api/attendances/**").hasAnyRole("STAFF", "ADMIN", "STUDENT")
+                        .requestMatchers(HttpMethod.POST, "/api/attendances/**").hasAnyRole("STAFF", "ADMIN", "STUDENT") // Students check-in to activities
+                        .requestMatchers(HttpMethod.PUT, "/api/attendances/**").hasAnyRole("STAFF", "ADMIN")
+                        .requestMatchers("/api/attendances/check-in-time/**").hasAnyRole("STAFF", "ADMIN")
+
+                        // All other requests require authentication
+                        .anyRequest().authenticated()
                 )
                 .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
