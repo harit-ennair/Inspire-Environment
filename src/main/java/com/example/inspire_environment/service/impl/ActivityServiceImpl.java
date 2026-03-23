@@ -15,7 +15,12 @@ import com.example.inspire_environment.repository.StaffRepository;
 import com.example.inspire_environment.repository.StudentRepository;
 import com.example.inspire_environment.service.ActivityService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.DayOfWeek;
@@ -90,6 +95,15 @@ public class ActivityServiceImpl implements ActivityService {
                 })
                 .map(activityMapper::toResponseDTO)
                 .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<ActivityResponseDTO> searchActivities(String search, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "startTime"));
+        Page<Activity> activityPage = activityRepository.searchActivities(
+                search == null ? "" : search, pageable);
+        return activityPage.map(activityMapper::toResponseDTO);
     }
 
     @Override

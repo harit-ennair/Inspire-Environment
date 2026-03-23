@@ -2,7 +2,7 @@ package com.example.inspire_environment.service;
 
 import com.example.inspire_environment.dto.request.ActivityRequestDTO;
 import com.example.inspire_environment.dto.response.ActivityResponseDTO;
-import com.example.inspire_environment.entity.Activity;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -15,6 +15,8 @@ public interface ActivityService {
     ActivityResponseDTO getActivityById(Long id);
 
     List<ActivityResponseDTO> getAllActivities(); // Admin / Staff
+
+    Page<ActivityResponseDTO> searchActivities(String search, int page, int size);
 
     List<ActivityResponseDTO> getActivitiesByStudent(Long studentId);
 

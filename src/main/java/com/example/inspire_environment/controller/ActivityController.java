@@ -5,6 +5,7 @@ import com.example.inspire_environment.dto.response.ActivityResponseDTO;
 import com.example.inspire_environment.entity.Activity;
 import com.example.inspire_environment.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,15 @@ public class ActivityController {
     public ResponseEntity<List<ActivityResponseDTO>> getAllActivities() {
         List<ActivityResponseDTO> activities = activityService.getAllActivities();
         return ResponseEntity.ok(activities);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<ActivityResponseDTO>> searchActivities(
+            @RequestParam(defaultValue = "") String search,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<ActivityResponseDTO> result = activityService.searchActivities(search, page, size);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/{id}")

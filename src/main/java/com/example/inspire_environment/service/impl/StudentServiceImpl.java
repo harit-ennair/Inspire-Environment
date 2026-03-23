@@ -166,7 +166,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void deleteStudent(Long id) {
-        Student student = studentRepository.findById(id)
+        studentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student", "id", id));
 
         // Delete all presence records associated with this student
