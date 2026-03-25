@@ -60,17 +60,27 @@ public class SecurityConfig {
                                 "/api/auth/**"
                         ).permitAll()
 
-                        // Role & Department management (Admin only)
-                        .requestMatchers("/api/roles/**").hasRole("ADMIN")
-                        .requestMatchers("/api/departments/**").hasRole("ADMIN")
+                        // Role & Department management
+                        .requestMatchers(HttpMethod.GET, "/api/roles/**").hasAnyRole("STAFF", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/roles/**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/roles/**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/roles/**").hasAnyRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/api/departments/**").hasAnyRole("STAFF", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/departments/**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/departments/**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/departments/**").hasAnyRole("ADMIN")
                         
-                        // Staff management (Admin only)
-                        .requestMatchers("/api/staff/**").hasRole("ADMIN")
+                        // Staff management
+                        .requestMatchers(HttpMethod.GET, "/api/staff/**").hasAnyRole("STAFF", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/staff/**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/staff/**").hasAnyRole("STAFF", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/staff/**").hasAnyRole("ADMIN")
 
                         // Students management
                         .requestMatchers(HttpMethod.GET, "/api/students/**").hasAnyRole("STAFF", "ADMIN", "STUDENT")
                         .requestMatchers(HttpMethod.POST, "/api/students/**").hasAnyRole("STAFF", "ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/students/**").hasAnyRole("STAFF", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/students/**").hasAnyRole("STAFF", "ADMIN", "STUDENT") // Students can update their own profile
                         .requestMatchers(HttpMethod.DELETE, "/api/students/**").hasAnyRole("ADMIN", "STAFF")
 
                         // Activities management
@@ -81,7 +91,7 @@ public class SecurityConfig {
 
                         // Presences management
                         .requestMatchers(HttpMethod.GET, "/api/presences/**").hasAnyRole("STAFF", "ADMIN", "STUDENT")
-                        .requestMatchers(HttpMethod.POST, "/api/presences/**").hasAnyRole("STAFF", "ADMIN", "STUDENT") // Students can check-in
+                        .requestMatchers(HttpMethod.POST, "/api/presences/**").hasAnyRole("STAFF", "ADMIN", "STUDENT")
                         .requestMatchers(HttpMethod.PUT, "/api/presences/**").hasAnyRole("STAFF", "ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/presences/**").hasAnyRole("ADMIN", "STAFF")
 
