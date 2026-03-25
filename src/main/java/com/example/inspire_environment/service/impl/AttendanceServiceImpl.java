@@ -117,16 +117,4 @@ public class AttendanceServiceImpl implements AttendanceService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<AttendanceResponseDTO> getAttendancesByStudent(Long studentId) {
-        // Validate student exists
-        if (!studentRepository.existsById(studentId)) {
-            throw new ResourceNotFoundException("Student", "id", studentId);
-        }
-
-        List<Attendance> attendances = attendanceRepository.findByStudentId(studentId);
-        return attendances.stream()
-                .map(attendanceMapper::toResponseDTO)
-                .collect(Collectors.toList());
-    }
 }

@@ -68,12 +68,6 @@ public class DepartmentServiceImpl implements DepartmentService {
         return departmentMapper.toResponseDTO(department);
     }
 
-    @Override
-    public DepartmentResponseDTO getDepartmentByName(String name) {
-        Department department = departmentRepository.findByName(name)
-                .orElseThrow(() -> new ResourceNotFoundException("Department", "name", name));
-        return departmentMapper.toResponseDTO(department);
-    }
 
     @Override
     public void deleteDepartment(Long id) {

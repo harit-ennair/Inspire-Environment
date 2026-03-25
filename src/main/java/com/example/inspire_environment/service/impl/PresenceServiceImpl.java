@@ -111,12 +111,6 @@ public class PresenceServiceImpl implements PresenceService {
         return presenceMapper.toResponseDTO(savedPresence);
     }
 
-    @Override
-    public PresenceResponseDTO getPresenceById(Long id) {
-        Presence presence = presenceRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Presence", "id", id));
-        return presenceMapper.toResponseDTO(presence);
-    }
 
     @Override
     public List<PresenceResponseDTO> getAllPresences() {
@@ -145,24 +139,6 @@ public class PresenceServiceImpl implements PresenceService {
                 .toList();
     }
 
-    @Override
-    public List<PresenceResponseDTO> getPresencesByDateRange(LocalDateTime start, LocalDateTime end) {
-        return presenceRepository.findByCheckInTimeBetween(start, end)
-                .stream()
-                .map(presenceMapper::toResponseDTO)
-                .toList();
-    }
-
-    @Override
-    public List<PresenceResponseDTO> getPresencesByStudentAndDateRange(Long studentId, LocalDateTime start, LocalDateTime end) {
-        studentRepository.findById(studentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Student", "id", studentId));
-
-        return presenceRepository.findByStudentIdAndCheckInTimeBetween(studentId, start, end)
-                .stream()
-                .map(presenceMapper::toResponseDTO)
-                .toList();
-    }
 
     @Override
     public List<PresenceResponseDTO> getActivePresences() {

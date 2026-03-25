@@ -14,5 +14,4 @@ public interface AttendanceService {
 
     List<AttendanceResponseDTO> getAttendancesByActivity(Long activityId);
 
-    List<AttendanceResponseDTO> getAttendancesByStudent(Long studentId);
 }

@@ -1,16 +1,13 @@
 package com.example.inspire_environment.service.impl;
 
 import com.example.inspire_environment.dto.request.StaffRequestDTO;
-import com.example.inspire_environment.dto.response.ActivityResponseDTO;
 import com.example.inspire_environment.dto.response.StaffResponseDTO;
 import com.example.inspire_environment.entity.Department;
 import com.example.inspire_environment.entity.Role;
 import com.example.inspire_environment.entity.Staff;
 import com.example.inspire_environment.exception.ConflictException;
 import com.example.inspire_environment.exception.ResourceNotFoundException;
-import com.example.inspire_environment.mapper.ActivityMapper;
 import com.example.inspire_environment.mapper.StaffMapper;
-import com.example.inspire_environment.repository.ActivityRepository;
 import com.example.inspire_environment.repository.DepartmentRepository;
 import com.example.inspire_environment.repository.RoleRepository;
 import com.example.inspire_environment.repository.StaffRepository;
@@ -30,9 +27,7 @@ public class StaffServiceImpl implements StaffService {
     private final StaffRepository staffRepository;
     private final DepartmentRepository departmentRepository;
     private final RoleRepository roleRepository;
-    private final ActivityRepository activityRepository;
     private final StaffMapper staffMapper;
-    private final ActivityMapper activityMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -157,19 +152,6 @@ public class StaffServiceImpl implements StaffService {
         return staffMapper.toResponseDTO(staff);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<ActivityResponseDTO> getManagedActivities(Long staffId) {
-        // Verify staff exists
-        if (!staffRepository.existsById(staffId)) {
-            throw new ResourceNotFoundException("Staff", "id", staffId);
-        }
-
-        return activityRepository.findByManagedById(staffId)
-                .stream()
-                .map(activityMapper::toResponseDTO)
-                .toList();
-    }
 
     @Override
     @Transactional(readOnly = true)
@@ -180,17 +162,4 @@ public class StaffServiceImpl implements StaffService {
                 .toList();
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<StaffResponseDTO> getAllStaffsByDepartment(Long departmentId) {
-        // Verify department exists
-        if (!departmentRepository.existsById(departmentId)) {
-            throw new ResourceNotFoundException("Department", "id", departmentId);
-        }
-
-        return staffRepository.findByDepartmentId(departmentId)
-                .stream()
-                .map(staffMapper::toResponseDTO)
-                .toList();
-    }
 }

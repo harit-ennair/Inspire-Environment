@@ -1,8 +1,6 @@
 package com.example.inspire_environment.controller;
 
 import com.example.inspire_environment.dto.request.StudentRequestDTO;
-import com.example.inspire_environment.dto.response.ActivityResponseDTO;
-import com.example.inspire_environment.dto.response.AttendanceResponseDTO;
 import com.example.inspire_environment.dto.response.StudentResponseDTO;
 import com.example.inspire_environment.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +29,6 @@ public class StudentController {
         return ResponseEntity.ok(students);
     }
 
-//    @GetMapping("/department/{departmentId}")
-//    public ResponseEntity<List<StudentResponseDTO>> getAllStudentsByDepartment(@PathVariable Long departmentId) {
-//        List<StudentResponseDTO> students = studentService.getAllStudentsByDepartment(departmentId);
-//        return ResponseEntity.ok(students);
-//    }
-
     @PostMapping
     public ResponseEntity<StudentRequestDTO> createStudent(@RequestBody StudentRequestDTO studentDto) {
         StudentRequestDTO response = studentService.createStudent(studentDto);
@@ -56,17 +48,5 @@ public class StudentController {
         studentService.deleteStudent(id);
         return ResponseEntity.noContent().build();
     }
-
-//    @GetMapping("/{studentId}/activities")
-//    public ResponseEntity<List<ActivityResponseDTO>> getMyActivities(@PathVariable Long studentId) {
-//        List<ActivityResponseDTO> activities = studentService.getMyActivities(studentId);
-//        return ResponseEntity.ok(activities);
-//    }
-
-//    @GetMapping("/{studentId}/attendances")
-//    public ResponseEntity<List<AttendanceResponseDTO>> getMyAttendances(@PathVariable Long studentId) {
-//        List<AttendanceResponseDTO> attendances = studentService.getMyAttendances(studentId);
-//        return ResponseEntity.ok(attendances);
-//    }
 }
 

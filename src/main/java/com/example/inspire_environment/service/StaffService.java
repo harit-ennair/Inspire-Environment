@@ -16,11 +16,6 @@ public interface StaffService {
 
     StaffResponseDTO getStaffById(Long id);
 
-    List<ActivityResponseDTO> getManagedActivities(Long staffId);
-
     List<StaffResponseDTO> getAllStaffs();
 
-    List<StaffResponseDTO> getAllStaffsByDepartment(Long departmentId);
-
-//    DashboardStaffDTO getStaffDashboard(Long staffId);
 }

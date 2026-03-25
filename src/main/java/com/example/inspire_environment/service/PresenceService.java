@@ -17,17 +17,11 @@ public interface PresenceService {
 
     PresenceResponseDTO updatePresence(Long id, PresenceRequestDTO dto);
 
-    PresenceResponseDTO getPresenceById(Long id);
-
     List<PresenceResponseDTO> getAllPresences();
 
     List<PresenceResponseDTO> getPresencesByStudent(Long studentId);
 
     List<PresenceResponseDTO> getPresencesByStatus(PresenceStatus status);
-
-    List<PresenceResponseDTO> getPresencesByDateRange(LocalDateTime start, LocalDateTime end);
-
-    List<PresenceResponseDTO> getPresencesByStudentAndDateRange(Long studentId, LocalDateTime start, LocalDateTime end);
 
     List<PresenceResponseDTO> getActivePresences();
 

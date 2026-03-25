@@ -1,8 +1,6 @@
 package com.example.inspire_environment.service.impl;
 
 import com.example.inspire_environment.dto.request.StudentRequestDTO;
-import com.example.inspire_environment.dto.response.ActivityResponseDTO;
-import com.example.inspire_environment.dto.response.AttendanceResponseDTO;
 import com.example.inspire_environment.dto.response.StudentResponseDTO;
 import com.example.inspire_environment.entity.Attendance;
 import com.example.inspire_environment.entity.Department;
@@ -11,10 +9,7 @@ import com.example.inspire_environment.entity.Role;
 import com.example.inspire_environment.entity.Student;
 import com.example.inspire_environment.exception.ConflictException;
 import com.example.inspire_environment.exception.ResourceNotFoundException;
-import com.example.inspire_environment.mapper.ActivityMapper;
-import com.example.inspire_environment.mapper.AttendanceMapper;
 import com.example.inspire_environment.mapper.StudentMapper;
-import com.example.inspire_environment.repository.ActivityRepository;
 import com.example.inspire_environment.repository.AttendanceRepository;
 import com.example.inspire_environment.repository.DepartmentRepository;
 import com.example.inspire_environment.repository.PresenceRepository;
@@ -36,12 +31,9 @@ public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
     private final DepartmentRepository departmentRepository;
     private final RoleRepository roleRepository;
-    private final ActivityRepository activityRepository;
     private final AttendanceRepository attendanceRepository;
     private final PresenceRepository presenceRepository;
     private final StudentMapper studentMapper;
-    private final ActivityMapper activityMapper;
-    private final AttendanceMapper attendanceMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -56,15 +48,6 @@ public class StudentServiceImpl implements StudentService {
     @Transactional(readOnly = true)
     public List<StudentResponseDTO> getAllStudents() {
         return studentRepository.findAll()
-                .stream()
-                .map(studentMapper::toResponseDTO)
-                .toList();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<StudentResponseDTO> getAllStudentsByDepartment(Long departmentId) {
-        return studentRepository.findByDepartmentId(departmentId)
                 .stream()
                 .map(studentMapper::toResponseDTO)
                 .toList();
@@ -184,31 +167,4 @@ public class StudentServiceImpl implements StudentService {
         studentRepository.deleteById(id);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<ActivityResponseDTO> getMyActivities(Long studentId) {
-        // Verify student exists
-        if (!studentRepository.existsById(studentId)) {
-            throw new ResourceNotFoundException("Student", "id", studentId);
-        }
-
-        return activityRepository.findByStudents_Id(studentId)
-                .stream()
-                .map(activityMapper::toResponseDTO)
-                .toList();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<AttendanceResponseDTO> getMyAttendances(Long studentId) {
-        // Verify student exists
-        if (!studentRepository.existsById(studentId)) {
-            throw new ResourceNotFoundException("Student", "id", studentId);
-        }
-
-        return attendanceRepository.findByStudentId(studentId)
-                .stream()
-                .map(attendanceMapper::toResponseDTO)
-                .toList();
-    }
 }

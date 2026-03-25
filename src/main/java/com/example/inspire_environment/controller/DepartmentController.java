@@ -27,11 +27,6 @@ public class DepartmentController {
         return ResponseEntity.ok(departmentService.getDepartmentById(id));
     }
 
-//    @GetMapping("/name/{name}")
-//    public ResponseEntity<DepartmentResponseDTO> getDepartmentByName(@PathVariable String name) {
-//        return ResponseEntity.ok(departmentService.getDepartmentByName(name));
-//    }
-
     @PostMapping
     public ResponseEntity<DepartmentResponseDTO> createDepartment(@RequestBody DepartmentRequestDTO departmentRequestDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(departmentService.createDepartment(departmentRequestDTO));

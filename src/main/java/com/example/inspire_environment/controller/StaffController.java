@@ -1,7 +1,6 @@
 package com.example.inspire_environment.controller;
 
 import com.example.inspire_environment.dto.request.StaffRequestDTO;
-import com.example.inspire_environment.dto.response.ActivityResponseDTO;
 import com.example.inspire_environment.dto.response.StaffResponseDTO;
 import com.example.inspire_environment.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,17 +48,5 @@ public class StaffController {
         List<StaffResponseDTO> staffs = staffService.getAllStaffs();
         return ResponseEntity.ok(staffs);
     }
-
-//    @GetMapping("/department/{departmentId}")
-//    public ResponseEntity<List<StaffResponseDTO>> getAllStaffsByDepartment(@PathVariable Long departmentId) {
-//        List<StaffResponseDTO> staffs = staffService.getAllStaffsByDepartment(departmentId);
-//        return ResponseEntity.ok(staffs);
-//    }
-
-//    @GetMapping("/{staffId}/activities")
-//    public ResponseEntity<List<ActivityResponseDTO>> getManagedActivities(@PathVariable Long staffId) {
-//        List<ActivityResponseDTO> activities = staffService.getManagedActivities(staffId);
-//        return ResponseEntity.ok(activities);
-//    }
 }
 

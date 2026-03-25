@@ -2,7 +2,6 @@ package com.example.inspire_environment.controller;
 
 import com.example.inspire_environment.dto.request.ActivityRequestDTO;
 import com.example.inspire_environment.dto.response.ActivityResponseDTO;
-import com.example.inspire_environment.entity.Activity;
 import com.example.inspire_environment.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
