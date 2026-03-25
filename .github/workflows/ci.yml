@@ -23,5 +23,17 @@ jobs:
     - name: Make mvnw executable
       run: chmod +x mvnw
       
-    - name: Build with Maven
-      run: ./mvnw -B clean verify
+    - name: Build with Maven (Skip Tests)
+      run: ./mvnw -B clean install -DskipTests
+      
+    - name: Run Tests with Maven
+      run: ./mvnw -B verify
+      
+    - name: Archive Test Results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-reports
+        path: |
+          **/target/surefire-reports/*.xml
+          **/target/failsafe-reports/*.xml
