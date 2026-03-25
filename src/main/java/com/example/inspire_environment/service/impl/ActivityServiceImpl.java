@@ -204,6 +204,7 @@ public class ActivityServiceImpl implements ActivityService {
                 attendance.setActivity(null);
                 attendanceRepository.save(attendance);
             });
+
         }
 
         // Now delete the activity
