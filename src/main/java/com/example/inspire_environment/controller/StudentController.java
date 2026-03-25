@@ -35,6 +35,7 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+
     @PutMapping("/{id}")
     public ResponseEntity<StudentRequestDTO> updateStudent(
             @PathVariable Long id,
