@@ -4,7 +4,6 @@ import com.example.inspire_environment.dto.request.PresenceRequestDTO;
 import com.example.inspire_environment.dto.response.PresenceResponseDTO;
 import com.example.inspire_environment.enums.PresenceStatus;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PresenceService {

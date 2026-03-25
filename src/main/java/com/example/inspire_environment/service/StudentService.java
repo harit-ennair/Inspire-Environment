@@ -1,8 +1,6 @@
 package com.example.inspire_environment.service;
 
 import com.example.inspire_environment.dto.request.StudentRequestDTO;
-import com.example.inspire_environment.dto.response.ActivityResponseDTO;
-import com.example.inspire_environment.dto.response.AttendanceResponseDTO;
 import com.example.inspire_environment.dto.response.StudentResponseDTO;
 
 import java.util.List;
