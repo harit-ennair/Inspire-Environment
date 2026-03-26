@@ -62,8 +62,8 @@ public class ActivityController {
         return ResponseEntity.ok(activities);
     }
 
-    @GetMapping("/managed-by/{managedBy}")
-    public ResponseEntity<List<ActivityResponseDTO>> getActivitiesManagedBy(@PathVariable long managedById) {
+    @GetMapping("/managed-by/{managedById}")
+    public ResponseEntity<List<ActivityResponseDTO>> getActivitiesManagedBy(@PathVariable Long managedById) {
         List<ActivityResponseDTO> activities = activityService.getActivitiesManagedBy(managedById);
         return ResponseEntity.ok(activities);
     }
